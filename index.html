@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+	<head>
+		<title>jsMagnetize test page</title>
+		<link rel="stylesheet" href="index.css">
+	</head>
+	<body>		
+		<div id="demo">			
+			<div id="w1" class="w" style="left:208px;top:208px;">one</div>
+			<div id="w2" class="w" style="top:272px;left:192px;">two</div>
+			<div id="w3" class="w" style="top:336px;left:336px;">three</div>				
+			<div id="w4" class="w" style="top:96px;left:288px;">four</div>	
+			<div id="w5" class="w" style="top:160px;left:160px;">five</div>	
+		</div>
+		<div id="explanation">
+			<h4>jsMagnetize</h4>
+			jsMagnetize provides a simple way to separate elements from each other. 
+			<p>
+			Using some given origin, elements are pushed away from that point such that no two elements overlap each other, and the spacing between them is at least as large as the specified padding. 
+			</p>			
+			<h4>When To Magnetize:</h4>
+			<div class="options">
+				<label><input type="radio" name="mode" value="click" checked>On Click</label>
+				<div class="onClickOptions">
+					<h5>Origin:</h5>
+					<label><input type="radio" name="clickmode" value="atEvent" checked>At Event</label>
+					<label><input type="radio" name="clickmode" value="atCenter">Center</label>
+					<label><input type="radio" name="clickmode" value="atArbitraryPoint">[150,150]</label><br/>
+				</div>
+			</div>
+			<div class="options">
+				<label><input type="radio" name="mode" value="mousemove">Magnetize Continuously</label>				
+			</div>
+			<h4>Constraining Movement</h4>
+			<p>
+				You can also supply a "constrain" function to the Magnetizer, to limit the movement of elements.  A demo of this is upcoming.
+			</p>
+		</div>
+	
+	 	<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
+		<script type="text/javascript" src="lib/jsplumb-geom-0.1.js"></script>
+		<script type="text/javascript" src="src/jsMagnetize-0.1.js"></script>
+					 
+		<script>
+			
+			$(function() {				
+				var d = $("#demo"),
+					magnetizeMode = "click";
+
+				//
+				// set magnetize mode - on click or continuous.
+				//
+				var setMode = function() {
+					var cb = $("[name='mode']:checked");
+					magnetizeMode = cb.val();
+					d.unbind("mousemove", _execute);
+					d.unbind("click", _execute);
+					d.bind(magnetizeMode, _execute);
+					// options if mode is click
+					$(".onClickOptions")[magnetizeMode == "click" ? "show": "hide"]();
+				};
+
+				// bind the setMode function to clicks on the radio buttons.
+				$("[name='mode']").bind("click", setMode);
+				
+				var _offset = function(id) {
+					var el = $("#" + id)[0],
+						_ = function(p) {
+							var v = el.style[p];
+							return parseInt(v.substring(0, v.length - 2));
+						};
+					return {
+						left:_("left"),
+						top:_("top")
+					};
+				};
+
+				var _setOffset = function(id, o) {
+					var el = $("#" + id)[0];
+					el.style.left = o.left + "px";
+					el.style.top = o.top + "px";
+				};
+
+				var gridConstrain = function(gridX, gridY) {
+					return function(id, current, delta) {
+						return {
+							left:(gridX * Math.floor( (current[0] + delta.left) / gridX )) - current[0],
+							top:(gridY * Math.floor( (current[1] + delta.top) / gridY )) - current[1]
+						};
+					};
+				};
+
+				//*
+				var m = new Magnetizer({
+					container:$("#demo"),
+					getPosition:_offset,
+					getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
+					getId : function(id) { return id; },
+					setPosition:_setOffset,
+					getContainerPosition:function(c) { return c.offset(); },
+					elements:["w5", "w4", "w1", "w2", "w3"],
+					//constrain:gridConstrain(10,100),
+					constrain:function(id, current, delta) {
+						//console.log(id, current, delta);
+						return delta;
+					}//,
+					//origin:[x,y] you can pass origin to the magnetizer, or pass it to the execute call.
+				});
+				//*/
+
+				/**
+				* Execute the magnetize routine in the mode specified by the radio buttons. 
+				*/
+				var _execute = function(e) {
+					var mode = magnetizeMode == "click" ? $("[name='clickmode']:checked").val() : "atEvent";
+					$(".indicator, .focus").remove();
+					executors[mode](e);
+					var xy = m.getOrigin();
+					d.append($("<div class='indicator'></div>").css({left:xy[0]+"px",top:xy[1]+"px"}));
+					d.append($("<div class='focus'></div>").css({left:(xy[0]-20)+"px",top:(xy[1]-20)+"px"}));
+				};
+
+				var executors = {
+					atEvent : function(e) {
+						m.executeAtEvent(e);
+					},
+					atCenter : function(_) {
+						m.executeAtCenter();
+					},
+					atArbitraryPoint:function() {
+						m.execute([150,150]);
+					}
+				}
+
+				setMode();
+			});	
+
+
+		</script>
+			
+	</body>
+</html>

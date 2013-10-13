@@ -1,0 +1,104 @@
+body {
+	text-align: center;
+	font-family:verdana;
+	font-size:11px;
+}
+
+#demo {
+	overflow:scroll;
+	
+	position:relative;
+	width:75%;
+	height:600px;
+	border:1px solid blue;
+	float:left;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+#explanation {
+	padding-left:25px;
+	float:left;
+	width:20%;
+	text-align: left;
+}
+
+.onClickOptions {
+	display:none;
+	margin-bottom:10px;	
+}
+
+.options {
+	padding-bottom:10px;
+	padding-top:10px;
+	border-bottom:1px solid gray;
+}
+
+
+.w { 
+	width:5em;
+	padding:1em;
+	position:absolute;
+	border: 1px solid black;
+	z-index:5;			
+	outline:20px solid green;	
+}
+._jsPlumb_connector {
+	z-index:4;
+}
+
+._jsPlumb_endpoint {
+	z-index:6;
+}
+
+.dragHover { border:1px dotted red; }
+
+#w1 {
+	width:10em;
+	height:10em;
+	/*top:13em;
+	left:13em;*/
+}
+
+#w2 {
+	/*top:17em;
+	left:12em;*/
+	height:5em;
+	width:5em;
+}
+
+#w3 {
+	/*top:21em;
+	left:21em;*/
+	width:7em;
+	height:5em;
+}
+
+#w4 {
+	/*top:6em;
+	left:18em;*/
+	height:7em;
+	width:12em;
+}
+
+#w5 {
+	/*top:10em;
+	left:10em;*/
+	width:5em;
+	height:5em;
+}
+
+.indicator {
+	width:2px;
+	height:2px;
+	background-color: red;
+	position: absolute;
+}
+
+.focus {
+	width:40px;
+	height:40px;
+	
+	border:1px solid blue;
+	position: absolute;
+}
