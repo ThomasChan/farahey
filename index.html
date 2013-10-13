@@ -4,65 +4,89 @@
 		<title>jsMagnetize test page</title>
 		<link rel="stylesheet" href="index.css">
 	</head>
-	<body>		
-		<div id="demo">			
-			<div id="w1" class="w" style="left:208px;top:208px;">one</div>
-			<div id="w2" class="w" style="top:272px;left:192px;">two</div>
-			<div id="w3" class="w" style="top:336px;left:336px;">three</div>				
-			<div id="w4" class="w" style="top:96px;left:288px;">four</div>	
-			<div id="w5" class="w" style="top:160px;left:160px;">five</div>	
-		</div>
-		<div id="explanation">
+	<body>	
+		<div id="blurb">
 			<h4>jsMagnetize</h4>
 			jsMagnetize provides a simple way to separate elements from each other. 
 			<p>
 			Using some given origin, elements are pushed away from that point such that no two elements overlap each other, and the spacing between them is at least as large as the specified padding. 
-			</p>			
-			<h4>When To Magnetize:</h4>
-			<div class="options">
-				<label><input type="radio" name="mode" value="click" checked>On Click</label>
-				<div class="onClickOptions">
-					<h5>Origin:</h5>
-					<label><input type="radio" name="clickmode" value="atEvent" checked>At Event</label>
-					<label><input type="radio" name="clickmode" value="atCenter">Center</label>
-					<label><input type="radio" name="clickmode" value="atArbitraryPoint">[150,150]</label><br/>
-				</div>
-			</div>
-			<div class="options">
-				<label><input type="radio" name="mode" value="mousemove">Magnetize Continuously</label>				
-			</div>
-			<h4>Constraining Movement</h4>
-			<p>
-				You can also supply a "constrain" function to the Magnetizer, to limit the movement of elements.  A demo of this is upcoming.
 			</p>
+		</div>
+		
+		<!-- click to magnetize at event location -->
+		<div id="demo1" class="demo">			
+			<h4>click to magnetize using event location as the origin</h4>
+			<div id="d1_w1" class="w w1" style="left:208px;top:208px;">one</div>
+			<div id="d1_w2" class="w w2" style="top:272px;left:192px;">two</div>
+			<div id="d1_w3" class="w w3" style="top:336px;left:336px;">three</div>				
+			<div id="d1_w4" class="w w4" style="top:96px;left:288px;">four</div>	
+			<div id="d1_w5" class="w w5" style="top:160px;left:160px;">five</div>				
+		</div>
+		
+		<!-- click to magnetize at center of elements -->
+		<div id="demo2" class="demo">			
+			<h4>click to magnetize using the center of the elements as the origin</h4>
+			<div id="d2_w1" class="w w1" style="left:208px;top:208px;">one</div>
+			<div id="d2_w2" class="w w2" style="top:272px;left:192px;">two</div>
+			<div id="d2_w3" class="w w3" style="top:336px;left:336px;">three</div>				
+			<div id="d2_w4" class="w w4" style="top:96px;left:288px;">four</div>	
+			<div id="d2_w5" class="w w5" style="top:160px;left:160px;">five</div>
+		</div>
+			
+		
+		<!-- click to magnetize at fixed position -->
+		<div id="demo3" class="demo">			
+			<h4>click to magnetize using a fixed location of [150,150] as the origin</h4>
+			<div id="d3_w1" class="w w1" style="left:208px;top:208px;">one</div>
+			<div id="d3_w2" class="w w2" style="top:272px;left:192px;">two</div>
+			<div id="d3_w3" class="w w3" style="top:336px;left:336px;">three</div>				
+			<div id="d3_w4" class="w w4" style="top:96px;left:288px;">four</div>	
+			<div id="d3_w5" class="w w5" style="top:160px;left:160px;">five</div>
+		</div>
+
+
+		<!-- click to magnetize and constrain elements to a grid -->
+		<div id="demo4" class="demo">			
+			<h4>click to magnetize and constrain elements to a grid</h4>
+			<div id="d4_w1" class="w w1" style="left:208px;top:208px;">one</div>
+			<div id="d4_w2" class="w w2" style="top:272px;left:192px;">two</div>
+			<div id="d4_w3" class="w w3" style="top:336px;left:336px;">three</div>				
+			<div id="d4_w4" class="w w4" style="top:96px;left:288px;">four</div>	
+			<div id="d4_w5" class="w w5" style="top:160px;left:160px;">five</div>
+		</div>
+
+
+		<!-- continuous magnetization -->
+		<div id="demo5" class="demo">	
+			<h4>continuous magnetization: move the mouse around</h4>		
+			<div id="d5_w1" class="w w1" style="left:208px;top:208px;">one</div>
+			<div id="d5_w2" class="w w2" style="top:272px;left:192px;">two</div>
+			<div id="d5_w3" class="w w3" style="top:336px;left:336px;">three</div>				
+			<div id="d5_w4" class="w w4" style="top:96px;left:288px;">four</div>	
+			<div id="d5_w5" class="w w5" style="top:160px;left:160px;">five</div>				
+		</div>
+
+		<!-- continuous magnetization with grid constrain -->
+		<div id="demo6" class="demo">	
+			<h4>continuous magnetization: move the mouse around</h4>		
+			<div id="d6_w1" class="w w1" style="left:208px;top:208px;">one</div>
+			<div id="d6_w2" class="w w2" style="top:272px;left:192px;">two</div>
+			<div id="d6_w3" class="w w3" style="top:336px;left:336px;">three</div>				
+			<div id="d6_w4" class="w w4" style="top:96px;left:288px;">four</div>	
+			<div id="d6_w5" class="w w5" style="top:160px;left:160px;">five</div>	
 		</div>
 	
 	 	<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
+	 	<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js'></script>
 		<script type="text/javascript" src="lib/jsplumb-geom-0.1.js"></script>
 		<script type="text/javascript" src="src/jsMagnetize-0.1.js"></script>
 					 
 		<script>
 			
-			$(function() {				
-				var d = $("#demo"),
-					magnetizeMode = "click";
+			$(function() {		
 
-				//
-				// set magnetize mode - on click or continuous.
-				//
-				var setMode = function() {
-					var cb = $("[name='mode']:checked");
-					magnetizeMode = cb.val();
-					d.unbind("mousemove", _execute);
-					d.unbind("click", _execute);
-					d.bind(magnetizeMode, _execute);
-					// options if mode is click
-					$(".onClickOptions")[magnetizeMode == "click" ? "show": "hide"]();
-				};
+// ------------------ helper methods to get/set absolute positions ---------------------------
 
-				// bind the setMode function to clicks on the radio buttons.
-				$("[name='mode']").bind("click", setMode);
-				
 				var _offset = function(id) {
 					var el = $("#" + id)[0],
 						_ = function(p) {
@@ -81,6 +105,56 @@
 					el.style.top = o.top + "px";
 				};
 
+// -------------------------------------------------------------------------------------------		
+
+			// all divs are draggable
+			$(".w").draggable();		
+
+// ------------------------   demo 1. click to magnetize at event location -------------------
+
+				var m1 = new Magnetizer({
+					container:$("#demo1"),
+					getPosition:_offset,
+					getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
+					getId : function(id) { return id; },
+					setPosition:_setOffset,
+					getContainerPosition:function(c) { return c.offset(); },
+					elements:["d1_w5", "d1_w4", "d1_w1", "d1_w2", "d1_w3"],
+					//constrain:gridConstrain(10,100),
+					constrain:function(id, current, delta) {
+						//console.log(id, current, delta);
+						return delta;
+					}
+				});
+				$("#demo1").bind("click", function(e) { m1.executeAtEvent(e); });
+
+
+// ------------------------   demo 2. click to magnetize at event location -------------------	
+
+
+				var m2 = new Magnetizer({
+					getPosition:_offset,
+					getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
+					getId : function(id) { return id; },
+					setPosition:_setOffset,
+					elements:["d2_w5", "d2_w4", "d2_w1", "d2_w2", "d2_w3"]
+				});
+				$("#demo2").bind("click", function(e) { m2.executeAtCenter(); });
+
+
+// ------------------------   demo 3. click to magnetize at fixed location -------------------	
+
+				var m3 = new Magnetizer({
+					getPosition:_offset,
+					getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
+					getId : function(id) { return id; },
+					setPosition:_setOffset,
+					elements:["d3_w5", "d3_w4", "d3_w1", "d3_w2", "d3_w3"]
+				});
+				$("#demo3").bind("click", function(e) { m3.execute([150,150]); });
+
+// ------------------------   demo 4. click to magnetize at event location with grid constrain -------------------	
+
 				var gridConstrain = function(gridX, gridY) {
 					return function(id, current, delta) {
 						return {
@@ -90,49 +164,48 @@
 					};
 				};
 
-				//*
-				var m = new Magnetizer({
-					container:$("#demo"),
+				var m4 = new Magnetizer({
+					container:$("#demo4"),
 					getPosition:_offset,
 					getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
 					getId : function(id) { return id; },
 					setPosition:_setOffset,
+					elements:["d4_w5", "d4_w4", "d4_w1", "d4_w2", "d4_w3"],
 					getContainerPosition:function(c) { return c.offset(); },
-					elements:["w5", "w4", "w1", "w2", "w3"],
-					//constrain:gridConstrain(10,100),
-					constrain:function(id, current, delta) {
-						//console.log(id, current, delta);
-						return delta;
-					}//,
-					//origin:[x,y] you can pass origin to the magnetizer, or pass it to the execute call.
+					constrain:gridConstrain(20,20)
+
 				});
-				//*/
+				$("#demo4").bind("click", function(e) { m4.executeAtEvent(e); });		
 
-				/**
-				* Execute the magnetize routine in the mode specified by the radio buttons. 
-				*/
-				var _execute = function(e) {
-					var mode = magnetizeMode == "click" ? $("[name='clickmode']:checked").val() : "atEvent";
-					$(".indicator, .focus").remove();
-					executors[mode](e);
-					var xy = m.getOrigin();
-					d.append($("<div class='indicator'></div>").css({left:xy[0]+"px",top:xy[1]+"px"}));
-					d.append($("<div class='focus'></div>").css({left:(xy[0]-20)+"px",top:(xy[1]-20)+"px"}));
-				};
+// ------------------------   demo 5. continuous magnetization -------------------	
 
-				var executors = {
-					atEvent : function(e) {
-						m.executeAtEvent(e);
-					},
-					atCenter : function(_) {
-						m.executeAtCenter();
-					},
-					atArbitraryPoint:function() {
-						m.execute([150,150]);
-					}
-				}
+				var m5 = new Magnetizer({
+					container:$("#demo5"),
+					getPosition:_offset,
+					getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
+					getId : function(id) { return id; },
+					setPosition:_setOffset,
+					elements:["d5_w5", "d5_w4", "d5_w1", "d5_w2", "d5_w3"],
+					getContainerPosition:function(c) { return c.offset(); }
 
-				setMode();
+				});
+				$("#demo5").bind("mousemove", function(e) { m5.executeAtEvent(e); });			
+
+// ------------------------   demo 6. continuous magnetization with grid -------------------	
+
+				var m6 = new Magnetizer({
+					container:$("#demo6"),
+					getPosition:_offset,
+					getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
+					getId : function(id) { return id; },
+					setPosition:_setOffset,
+					elements:["d6_w5", "d6_w4", "d6_w1", "d6_w2", "d6_w3"],
+					getContainerPosition:function(c) { return c.offset(); },
+					constrain:gridConstrain(20,20)
+
+				});
+				$("#demo6").bind("mousemove", function(e) { m6.executeAtEvent(e); });							
+
 			});	
 
 
