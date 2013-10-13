@@ -10,7 +10,7 @@ You can see a demonstration [here](http://morrisonpitt.com/jsMagnetize).
 
 #### Dependencies
 
-jsMagnetize has a dependency on [jsplumb-geom](https://github.com/sporritt/jsplumb-geom). If you have [jsPlumb](https://github.com/sporritt/jsPlumb) in your page then `jsplumb-geom` is already available to you.
+jsMagnetize has a dependency on [jsplumb-geom](https://github.com/sporritt/jsplumb-geom). If you have [jsPlumb](https://github.com/sporritt/jsPlumb) in your page then jsplumb-geom is already available to you.
 
 #### Magnetizing
 
@@ -20,14 +20,22 @@ In order to magnetize a set of elements, you need to provide several pieces of i
 - a function that can return the current offset for some element in the list. It doesn't matter what datatype this function takes as argument, as long as it matches the objects in the element list.
 - a function that can take some element in the list and a location for it, and apply that location to the element.
 - a function that can take some element in the list and return its id.
-- a function that can take some element in the list and return its size as a [width,height] array.
+- a function that can take some element in the list and return its size as a `[width,height]` array.
 
 Should you wish to make use of the `executeAtEvent` method you will also need to provide:
 
 - a container element. This is the element whose origin is being used calculate/set offsets. Ordinarily this will most likely be the parent of the elements you are magnetizing.
 - a function that can return the page offset of the container element. This is used to map the event's page location into the coordinate system used by your get/set functions.
 
-At this point you might be thinking this sounds kind of low-level - visions of jQuery's `offset` function might now be floating through your mind. It is indeed low level. I need it to be this way so that I can reuse it across several libraries. But I am considering the possibility of releasing library-specific wrapper around the magnetizer in the future.
+At this point you might be thinking this sounds kind of low-level - why didn't I just do all the offset-y type stuff using jQuery or something?  jQuery's in the demo page, right? So, I agree: it is indeed low level. I need it to be this way so that I can reuse it across several libraries. But I am considering the possibility of releasing library-specific wrappers around the magnetizer in the future.  One possibility in jQuery land could be something like:
+
+    $("#myElement").magnetize({
+    	elements:$(".aChildOfMine"),
+    	continuous:true,
+    	padding:[10,10]
+    });
+
+...meaning magnetize all the child elements having class `aChildOfMine` in `#myElement` continuously as the user moves the mouse around. You can of course do this right now but it takes a bit more typing.
 
 ##### Origin
 
@@ -97,3 +105,98 @@ Takes three arrays - `o` is the element's offset, `s` is its size, and `p` is th
 - jsMagnetize.calculateSpacingAdjustment = function(r1, r2, angle) { ... }
 
 Takes two rectangles in the form `{ x:..., y:..., w:..., h:... }` and calculates how far to move r2 such that the two rectangles do not overlap.  `angle` denotes the angle of travel for r2, and if not supplied is calculated by drawing a line between the centers of the two rectangles.
+
+#### Examples
+
+This is the source from the various examples on the [demo page](http://morrisonpitt.com/jsMagnetize).
+
+##### 1. click to magnetize at event location
+
+Here the magnetizer's origin is set to be the location of the click event. `_offset` and `_setOffset` are functions the demo page uses to get/set absolute positions on the style of some element.
+
+	var m1 = new Magnetizer({
+		container:$("#demo1"),
+		getPosition:_offset,
+		getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
+		getId : function(id) { return id; },
+		setPosition:_setOffset,
+		getContainerPosition:function(c) { return c.offset(); },
+		elements:["d1\_w5", "d1\_w4", "d1\_w1", "d1\_w2", "d1\_w3"]
+	});
+	$("#demo1").bind("click", function(e) { m1.executeAtEvent(e); });
+
+##### 2. click to magnetize at center of elements
+
+	var m2 = new Magnetizer({
+		getPosition:_offset,
+		getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
+		getId : function(id) { return id; },
+		setPosition:_setOffset,
+		elements:["d2\_w5", "d2\_w4", "d2\_w1", "d2\_w2", "d2\_w3"]
+	});
+	$("#demo2").bind("click", function(e) { m2.executeAtCenter(); });
+
+#####  3. click to magnetize at fixed location
+
+	var m3 = new Magnetizer({
+		getPosition:_offset,
+		getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
+		getId : function(id) { return id; },
+		setPosition:_setOffset,
+		elements:["d3_w5", "d3_w4", "d3_w1", "d3_w2", "d3_w3"]
+	});
+	$("#demo3").bind("click", function(e) { m3.execute([150,150]); });
+
+##### 4. click to magnetize at event location with grid constrain
+
+	var gridConstrain = function(gridX, gridY) {
+		return function(id, current, delta) {
+			return {
+				left:(gridX * Math.floor( (current[0] + delta.left) / gridX )) - current[0],
+				top:(gridY * Math.floor( (current[1] + delta.top) / gridY )) - current[1]
+			};
+		};
+	};
+
+	var m4 = new Magnetizer({
+		container:$("#demo4"),
+		getPosition:_offset,
+		getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
+		getId : function(id) { return id; },
+		setPosition:_setOffset,
+		elements:["d4_w5", "d4_w4", "d4_w1", "d4_w2", "d4_w3"],
+		getContainerPosition:function(c) { return c.offset(); },
+		constrain:gridConstrain(20,20)
+
+	});
+	$("#demo4").bind("click", function(e) { m4.executeAtEvent(e); });	
+
+##### 5. continuous magnetization on mousemove
+
+	var m5 = new Magnetizer({
+		container:$("#demo5"),
+		getPosition:_offset,
+		getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
+		getId : function(id) { return id; },
+		setPosition:_setOffset,
+		elements:["d5_w5", "d5_w4", "d5_w1", "d5_w2", "d5_w3"],
+		getContainerPosition:function(c) { return c.offset(); }
+
+	});
+	$("#demo5").bind("mousemove", function(e) { m5.executeAtEvent(e); });
+
+##### 6. continuous magnetization on mousemove with grid
+
+	var m6 = new Magnetizer({
+		container:$("#demo6"),
+		getPosition:_offset,
+		getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
+		getId : function(id) { return id; },
+		setPosition:_setOffset,
+		elements:["d6_w5", "d6_w4", "d6_w1", "d6_w2", "d6_w3"],
+		getContainerPosition:function(c) { return c.offset(); },
+		constrain:gridConstrain(20,20)
+
+	});
+	$("#demo6").bind("mousemove", function(e) { m6.executeAtEvent(e); });
+
