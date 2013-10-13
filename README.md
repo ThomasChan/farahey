@@ -4,6 +4,10 @@ This is a small utility that provides a means for "magnetizing" a set of element
 
 Currently, all elements are assumed to have the same "charge", which is to say that every element repels every other element.  It is possible that a future version of this utility could allow for elements to possess different charges.
 
+#### Demonstration
+
+You can see a demonstration [here](http://morrisonpitt.com/jsMagnetize).
+
 #### Dependencies
 
 jsMagnetize has a dependency on [jsplumb-geom](https://github.com/sporritt/jsplumb-geom). If you have [jsPlumb](https://github.com/sporritt/jsPlumb) in your page then `jsplumb-geom` is already available to you.
