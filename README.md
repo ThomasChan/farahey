@@ -53,6 +53,17 @@ This method computes the logical center of all the elements and uses that as the
 
 This method takes some event and maps its location to your coordinate space, using that value as the magnetization origin.
 
+#### Filtering Elements (0.2+)
+
+You can provide a `filter` function which, when passed the id of some element, should return true if the
+element may move, or false if it may not:
+  
+	filter:function(id) {
+		return myElementMap[id] == null;
+	}
+
+This shows a simple implementation in which elements that may not move are stored via their ids in a hash.
+
 #### Constraining Movement
 
 You can provide a `constrain` function to control the movement of your elements.  The method signature is:
