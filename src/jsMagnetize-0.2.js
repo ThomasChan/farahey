@@ -57,7 +57,7 @@
         _paddedRectangle = jsMagnetize.paddedRectangle = function(o, s, p) {
             return { x:o[0] - p[0], y: o[1] - p[1], w:s[0] + (2 * p[0]), h:s[1] + (2 * p[1]) };
         },
-        _magnetize = function(positionArray, positions, sizes, padding, constrain, origin) {                        
+        _magnetize = function(positionArray, positions, sizes, padding, constrain, origin, filter) {                        
             origin = origin || [0,0];
 
             var focus = _paddedRectangle(origin, [1,1], padding),
@@ -74,7 +74,7 @@
                         //side
                         r1 = _paddedRectangle(o1, s1, padding);
 
-                    if (jsPlumbGeom.intersects(focus, r1)) {                                                                                                 
+                    if (filter(positionArray[i][1]) && jsPlumbGeom.intersects(focus, r1)) {                                                                                                 
                         adjustBy = _calculateSpacingAdjustment(focus, r1);
                         constrainedAdjustment = constrain(positionArray[i][1], o1, adjustBy);
                         o1[0] += (constrainedAdjustment.left + 1);
@@ -94,7 +94,7 @@
                               r2 = _paddedRectangle(o2, s2, padding);
                     
                           // if the two rectangles intersect then figure out how much to move the second one by.
-                            if (jsPlumbGeom.intersects(r1, r2)) {                                   
+                            if (filter(positionArray[j][1]) && jsPlumbGeom.intersects(r1, r2)) {                                   
                                 uncleanRun = true;                                                                          
                                 adjustBy = _calculateSpacingAdjustment(r1, r2),
                                 constrainedAdjustment = constrain(positionArray[j][1], o2, adjustBy);
@@ -144,7 +144,8 @@
                 origin = params.origin || [0,0],
                 executeNow = params.executeNow,
                 minx, miny, maxx, maxy,
-                getOrigin = this.getOrigin = function() { return origin; };
+                getOrigin = this.getOrigin = function() { return origin; },
+                filter = params.filter || function(_) { return true; };
 
             var _updatePositions = function() {
                 positionArray = []; positions = {}; sizes = {};
@@ -167,7 +168,7 @@
 
             var _run = function() {
                 if (elements.length > 1) {
-                    _magnetize(positionArray, positions, sizes, padding, constrain, origin);
+                    _magnetize(positionArray, positions, sizes, padding, constrain, origin, filter);
                     _positionElements();
                 }
             };
