@@ -29,10 +29,11 @@ body {
 	position:absolute;
 	border: 1px solid black;
 	z-index:5;			
-	outline:20px solid green;	
+	border:20px solid green;	
 	cursor:pointer;
 	background-color:white;
 	opacity:0.8;
+	border-radius:25px;
 }
 
 .w1 { width:10em; height:10em; }

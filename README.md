@@ -211,3 +211,27 @@ Here the magnetizer's origin is set to be the location of the click event. `_off
 	});
 	$("#demo6").bind("mousemove", function(e) { m6.executeAtEvent(e); });
 
+##### 7. magnetize without moving element that was clicked on
+
+	var _elsToFilter = {},
+		_filter = function(id) {
+			return _elsToFilter[id] == null;
+		};
+
+	var m7 = new Magnetizer({
+		container:$("#demo7"),
+		getContainerPosition:function(c) { return c.offset(); },
+		getPosition:_offset,
+		getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
+		getId : function(id) { return id; },
+		setPosition:_setOffset,
+		elements:["d7_w5", "d7_w4", "d7_w1", "d7_w2", "d7_w3"],
+		filter:_filter
+	});
+
+	$("#demo7 div").bind("click", function(e) { 
+		_elsToFilter = {};
+		_elsToFilter[$(this).attr("id")] = true;
+		m7.executeAtEvent(e); 
+	});	
+

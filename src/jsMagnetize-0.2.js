@@ -8,6 +8,45 @@
         jsMagnetize = root.jsMagnetize = {};
     } 
 
+    var _log = function(id, amount) {
+        console.log("Moving ", id, amount.left, amount.top)
+    }
+
+    var findInsertionPoint = function(sortedArr, val, comparator) {   
+           var low = 0, high = sortedArr.length;
+           var mid = -1, c = 0;
+           while(low < high)   {
+              mid = parseInt((low + high)/2);
+              c = comparator(sortedArr[mid], val);
+              if(c < 0)   {
+                 low = mid + 1;
+              }else if(c > 0) {
+                 high = mid;
+              }else {
+                 return mid;
+              }
+           }
+           return low;
+        },
+        insertSorted = function(array, value, comparator) {
+            var ip = findInsertionPoint(array, value, comparator);
+            array.splice(ip, 0, value);
+        },
+        distanceFromOriginComparator = function(r1, r2, origin) {
+            var d1 = jsPlumbGeom.lineLength(origin, [ r1.x + (r1.w / 2), r1.y + (r1.h / 2)]),
+                d2 = jsPlumbGeom.lineLength(origin, [ r2.x + (r2.w / 2), r2.y + (r2.h / 2)]);
+
+            return d1 < d2 ? -1 : d1 == d2 ? 0 : 1;
+        },
+        EntryComparator = function(origin) {
+            this.compare = function(e1, e2) {
+                var d1 = jsPlumbGeom.lineLength(origin, e1[0]),
+                    d2 = jsPlumbGeom.lineLength(origin, e2[0]);
+
+                return d1 < d2 ? -1 : d1 == d2 ? 0 : 1;
+            };
+        };
+
     var _isOnEdge = function(r, axis, dim, v) { return (r[axis] <= v && v <= r[axis] + r[dim]); },
         _xAdj = [ function(r1, r2) { return r1.x + r1.w - r2.x; }, function(r1, r2) { return r1.x - (r2.x + r2.w); } ],
         _yAdj = [ function(r1, r2) { return r1.y + r1.h - r2.y; }, function(r1, r2) { return r1.y - (r2.y + r2.h); } ],
@@ -32,24 +71,24 @@
             }
         },            
         /*
-        * Calculates how far to move r2 from r1 so that it no longer overlaps. Used by magnetize, and by the circular layout.                    
-        * if angle is supplied, then it means we want r2 to move along a vector at that angle. otherwise we want it
-        * to move along a vector joining the two rectangle centers.
+        * Calculates how far to move r2 from r1 so that it no longer overlaps.
+        * if origin is supplied, then it means we want r2 to move along a vector joining r2's center to that point. 
+        * otherwise we want it to move along a vector joining the two rectangle centers.
         */
-        _calculateSpacingAdjustment = jsMagnetize.calculateSpacingAdjustment = function(r1, r2, angle) {
+        _calculateSpacingAdjustment = jsMagnetize.calculateSpacingAdjustment = function(r1, r2, origin) {
             var m,b,s;
-            if (angle == null) {
-                var c1 = [ r1.x + (r1.w / 2), r1.y + (r1.h / 2) ],
+            //if (angle == null) {
+                var c1 = origin || [ r1.x + (r1.w / 2), r1.y + (r1.h / 2) ],
                     c2 = [ r2.x + (r2.w / 2), r2.y + (r2.h / 2) ];
                 m = jsPlumbGeom.gradient(c1, c2),
                 s = jsPlumbGeom.quadrant(c1, c2),
                 b = (m == Infinity || m == -Infinity || isNaN(m)) ? 0 : c1[1] - (m * c1[0]);
-            }
+            /*}
             else {
                 m = angle.dy / angle.dx;
                 s = angle.s;
                 b = (m == Infinity || m == -Infinity || isNaN(m)) ? 0 : angle.y - (m * angle.x);
-            }
+            }*/
                     
             return _genAdj(r1, r2, m, b, s);        
         },    
@@ -57,7 +96,10 @@
         _paddedRectangle = jsMagnetize.paddedRectangle = function(o, s, p) {
             return { x:o[0] - p[0], y: o[1] - p[1], w:s[0] + (2 * p[0]), h:s[1] + (2 * p[1]) };
         },
-        _magnetize = function(positionArray, positions, sizes, padding, constrain, origin, filter) {                        
+        _magnetize = function(positionArray, positions, sizes, padding, 
+            constrain, origin, filter, moveRelativeToOrigin,
+            updateOnStep, stepInterval, stepCallback) 
+        {                        
             origin = origin || [0,0];
 
             var focus = _paddedRectangle(origin, [1,1], padding),
@@ -73,14 +115,16 @@
                         // create a rectangle for first element: this encompasses the element and padding on each
                         //side
                         r1 = _paddedRectangle(o1, s1, padding);
-
-                    if (filter(positionArray[i][1]) && jsPlumbGeom.intersects(focus, r1)) {                                                                                                 
-                        adjustBy = _calculateSpacingAdjustment(focus, r1);
+                    
+                    if (filter(positionArray[i][1]) && jsPlumbGeom.intersects(focus, r1)) {
+                        adjustBy = _calculateSpacingAdjustment(focus, r1, null);
                         constrainedAdjustment = constrain(positionArray[i][1], o1, adjustBy);
+                        _log(positionArray[i][1], constrainedAdjustment);
                         o1[0] += (constrainedAdjustment.left + 1);
                         o1[1] += (constrainedAdjustment.top + 1);
                     }
 
+                    //*
                     //now move others to account for this one, if necessary.
                     // reset rectangle for node
                     r1 = _paddedRectangle(o1, s1, padding);
@@ -94,15 +138,20 @@
                               r2 = _paddedRectangle(o2, s2, padding);
                     
                           // if the two rectangles intersect then figure out how much to move the second one by.
-                            if (filter(positionArray[j][1]) && jsPlumbGeom.intersects(r1, r2)) {                                   
-                                uncleanRun = true;                                                                          
-                                adjustBy = _calculateSpacingAdjustment(r1, r2),
-                                constrainedAdjustment = constrain(positionArray[j][1], o2, adjustBy);
-                                o2[0] += (constrainedAdjustment.left + 1);
-                                o2[1] += (constrainedAdjustment.top + 1);
+                            if (jsPlumbGeom.intersects(r1, r2)) {
+                                // TODO instead of moving neither, the other node should move.
+                                if (filter(positionArray[j][1])) {
+                                    uncleanRun = true;                                                                          
+                                    adjustBy = _calculateSpacingAdjustment(r1, r2, moveRelativeToOrigin ? origin : null),
+                                    constrainedAdjustment = constrain(positionArray[j][1], o2, adjustBy);
+                                    _log(positionArray[j][1], constrainedAdjustment);
+                                    o2[0] += (constrainedAdjustment.left + 1);
+                                    o2[1] += (constrainedAdjustment.top + 1);
+                                }
                             }
                         }
                     } 
+                    //*/
                 }
                 iteration++;
             }                     
@@ -128,6 +177,8 @@
         * @param {Integer[]} [origin] The origin of magnetization, in pixels. Defaults to 0,0. You can also supply this to the `execute` call.
         * @param {Selector|String[]|Element[]} elements List of elements on which to operate.
         * @param {Boolean} [executeNow=false] Whether or not to execute the routine immediately.
+        * @param {Function} [filter] Optional function that takes an element id and returns whether or not that element can be moved.
+        * @param {Boolean} [moveRelativeToOrigin=false] If true, elements are pushed on a line from the origin through the element's center. If false - the default - elements are pushed on a line between their center and the center of the element that is pushing them.
         */
         root.Magnetizer = function(params) {
             var getPosition = params.getPosition,
@@ -145,8 +196,23 @@
                 executeNow = params.executeNow,
                 minx, miny, maxx, maxy,
                 getOrigin = this.getOrigin = function() { return origin; },
-                filter = params.filter || function(_) { return true; };
+                filter = params.filter || function(_) { return true; },
+                moveRelativeToOrigin = params.moveRelativeToOrigin,
+                comparator = new EntryComparator(origin),
+                updateOnStep = params.updateOnStep,
+                stepInterval = params.stepInterval || 350;
 
+            // if moveRelativeToOrigin we want to sort positions, so this helper method inserts
+            // positions sorted. 
+            var _addToPositionArray = function(p) {
+                if (!moveRelativeToOrigin || positionArray.length == 0)
+                    positionArray.push(p);
+                else {
+                 //   for (var i = 0; i < positionArray.length; i++) {
+                        insertSorted(positionArray, p, comparator.compare);
+                   // }
+                }
+            };
             var _updatePositions = function() {
                 positionArray = []; positions = {}; sizes = {};
                 minx = miny = Infinity;
@@ -157,7 +223,7 @@
                         id = getId(elements[i]);
 
                     positions[id] = [p.left, p.top];
-                    positionArray.push([ [p.left, p.top], id]);
+                    _addToPositionArray([ [p.left, p.top], id]);
                     sizes[id] = s;
                     minx = Math.min(minx, p.left);
                     miny = Math.min(miny, p.top);
@@ -168,7 +234,7 @@
 
             var _run = function() {
                 if (elements.length > 1) {
-                    _magnetize(positionArray, positions, sizes, padding, constrain, origin, filter);
+                    _magnetize(positionArray, positions, sizes, padding, constrain, origin, filter, moveRelativeToOrigin, updateOnStep, stepInterval, _positionElements);
                     _positionElements();
                 }
             };
