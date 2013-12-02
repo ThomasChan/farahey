@@ -38,10 +38,29 @@
 
             return d1 < d2 ? -1 : d1 == d2 ? 0 : 1;
         },
-        EntryComparator = function(origin) {
+        EntryComparator = function(origin, getSize) {
+            var _origin = origin,
+                _cache = {},
+                _get = function(entry) {
+                    if (!_cache[entry[1]]) {
+                        var s = getSize(entry[1]);
+                        _cache[entry[1]] = {
+                            l:entry[0][0],
+                            t:entry[0][1],
+                            w:s[0],
+                            h:s[1],
+                            center:[entry[0][0] + (s[0] / 2), entry[0][1] + (s[1] / 2) ]
+                        };
+                    }
+                    return _cache[entry[1]];
+                }
+            this.setOrigin = function(o) {
+                _origin = o;
+                _cache = {};
+            };
             this.compare = function(e1, e2) {
-                var d1 = jsPlumbGeom.lineLength(origin, e1[0]),
-                    d2 = jsPlumbGeom.lineLength(origin, e2[0]);
+                var d1 = jsPlumbGeom.lineLength(_origin, _get(e1).center),
+                    d2 = jsPlumbGeom.lineLength(_origin, _get(e2).center);
 
                 return d1 < d2 ? -1 : d1 == d2 ? 0 : 1;
             };
@@ -75,23 +94,35 @@
         * if origin is supplied, then it means we want r2 to move along a vector joining r2's center to that point. 
         * otherwise we want it to move along a vector joining the two rectangle centers.
         */
-        _calculateSpacingAdjustment = jsMagnetize.calculateSpacingAdjustment = function(r1, r2, origin) {
-            var m,b,s;
-            //if (angle == null) {
-                var c1 = origin || [ r1.x + (r1.w / 2), r1.y + (r1.h / 2) ],
-                    c2 = [ r2.x + (r2.w / 2), r2.y + (r2.h / 2) ];
+        _calculateSpacingAdjustment = jsMagnetize.calculateSpacingAdjustment = function(r1, r2) {
+            var c1 = r1.center || [ r1.x + (r1.w / 2), r1.y + (r1.h / 2) ],
+                c2 = r2.center || [ r2.x + (r2.w / 2), r2.y + (r2.h / 2) ],
                 m = jsPlumbGeom.gradient(c1, c2),
                 s = jsPlumbGeom.quadrant(c1, c2),
-                b = (m == Infinity || m == -Infinity || isNaN(m)) ? 0 : c1[1] - (m * c1[0]);
-            /*}
-            else {
-                m = angle.dy / angle.dx;
-                s = angle.s;
-                b = (m == Infinity || m == -Infinity || isNaN(m)) ? 0 : angle.y - (m * angle.x);
-            }*/
-                    
+                b = (m == Infinity || m == -Infinity || isNaN(m)) ? 0 : c1[1] - (m * c1[0]);                
+
             return _genAdj(r1, r2, m, b, s);        
         },    
+        //
+        // moves r2 on a vector joining origin (O) to the center of r2 (CR2), to such a position that it no longer
+        // overlaps r1. This means finding the angle of the vector between O and CR2, and it segment.  depending on the
+        // segment you then move one of the corners of r2 horizontally, and adjust its vertical position using 
+        // thwe angle of the vector.
+        _moveRectangle = function(r1, r2, origin) {
+            var c1 = origin,
+                c2 = r2.center || [ r2.x + (r2.w / 2), r2.y + (r2.h / 2) ],
+                m = jsPlumbGeom.gradient(c1, c2),
+                s = jsPlumbGeom.quadrant(c1, c2),
+                b = (m == Infinity || m == -Infinity || isNaN(m)) ? 0 : c1[1] - (m * c1[0]),
+                xAdj = _adj[s][0](r1, r2),
+                theta = Math.atan(m),
+                hyp = xAdj / Math.cos(theta),
+                yAdj = hyp * Math.sin(theta)
+
+                console.log("i would adjust X by ", xAdj);
+
+                return {left:xAdj,top:yAdj};           
+        },
         // calculate a padded rectangle for the given element with offset & size, and desired padding.
         _paddedRectangle = jsMagnetize.paddedRectangle = function(o, s, p) {
             return { x:o[0] - p[0], y: o[1] - p[1], w:s[0] + (2 * p[0]), h:s[1] + (2 * p[1]) };
@@ -101,60 +132,80 @@
             updateOnStep, stepInterval, stepCallback) 
         {                        
             origin = origin || [0,0];
+            stepCallback = stepCallback || function() { };
 
             var focus = _paddedRectangle(origin, [1,1], padding),
-                iterations = 100, iteration = 1, uncleanRun = true, adjustBy, constrainedAdjustment;
+                iterations = 100, iteration = 1, uncleanRun = true, adjustBy, constrainedAdjustment,
+                step = function() {
+                    for (var i = 0; i < positionArray.length; i++) {
+                        var o1 = positions[positionArray[i][1]],
+                            oid = positionArray[i][1],
+                            a1 = positionArray[i][2], // angle to node from magnet origin
+                            s1 = sizes[positionArray[i][1]],
+                            // create a rectangle for first element: this encompasses the element and padding on each
+                            //side
+                            r1 = _paddedRectangle(o1, s1, padding);
+                        
+                        if (filter(positionArray[i][1]) && jsPlumbGeom.intersects(focus, r1)) {
+                            adjustBy = _calculateSpacingAdjustment(focus, r1);
+                            constrainedAdjustment = constrain(positionArray[i][1], o1, adjustBy);
+                            _log(positionArray[i][1], constrainedAdjustment);
+                            o1[0] += (constrainedAdjustment.left + 1);
+                            o1[1] += (constrainedAdjustment.top + 1);
+                        }
 
-            while (uncleanRun && iteration < iterations) {
-                uncleanRun = false;
-                for (var i = 0; i < positionArray.length; i++) {
-                    var o1 = positions[positionArray[i][1]],
-                        oid = positionArray[i][1],
-                        a1 = positionArray[i][2], // angle to node from magnet origin
-                        s1 = sizes[positionArray[i][1]],
-                        // create a rectangle for first element: this encompasses the element and padding on each
-                        //side
+                        //*
+                        //now move others to account for this one, if necessary.
+                        // reset rectangle for node
                         r1 = _paddedRectangle(o1, s1, padding);
-                    
-                    if (filter(positionArray[i][1]) && jsPlumbGeom.intersects(focus, r1)) {
-                        adjustBy = _calculateSpacingAdjustment(focus, r1, null);
-                        constrainedAdjustment = constrain(positionArray[i][1], o1, adjustBy);
-                        _log(positionArray[i][1], constrainedAdjustment);
-                        o1[0] += (constrainedAdjustment.left + 1);
-                        o1[1] += (constrainedAdjustment.top + 1);
-                    }
-
-                    //*
-                    //now move others to account for this one, if necessary.
-                    // reset rectangle for node
-                    r1 = _paddedRectangle(o1, s1, padding);
-                    for (var j = 0; j < positionArray.length; j++) {                        
-                        if (i != j) {
-                          var o2 = positions[positionArray[j][1]],
-                              a2 = positionArray[j][2], // angle to node from magnet origin
-                              s2 = sizes[positionArray[j][1]],
-                              // create a rectangle for the second element, again by putting padding of the desired
-                              // amount around the bounds of the element.
-                              r2 = _paddedRectangle(o2, s2, padding);
-                    
-                          // if the two rectangles intersect then figure out how much to move the second one by.
-                            if (jsPlumbGeom.intersects(r1, r2)) {
-                                // TODO instead of moving neither, the other node should move.
-                                if (filter(positionArray[j][1])) {
-                                    uncleanRun = true;                                                                          
-                                    adjustBy = _calculateSpacingAdjustment(r1, r2, moveRelativeToOrigin ? origin : null),
-                                    constrainedAdjustment = constrain(positionArray[j][1], o2, adjustBy);
-                                    _log(positionArray[j][1], constrainedAdjustment);
-                                    o2[0] += (constrainedAdjustment.left + 1);
-                                    o2[1] += (constrainedAdjustment.top + 1);
+                        for (var j = 0; j < positionArray.length; j++) {                        
+                            if (i != j) {
+                              var o2 = positions[positionArray[j][1]],
+                                  a2 = positionArray[j][2], // angle to node from magnet origin
+                                  s2 = sizes[positionArray[j][1]],
+                                  // create a rectangle for the second element, again by putting padding of the desired
+                                  // amount around the bounds of the element.
+                                  r2 = _paddedRectangle(o2, s2, padding);
+                        
+                              // if the two rectangles intersect then figure out how much to move the second one by.
+                                if (jsPlumbGeom.intersects(r1, r2)) {
+                                    // TODO instead of moving neither, the other node should move.
+                                    if (filter(positionArray[j][1])) {
+                                        uncleanRun = true;                                                                          
+                                        //adjustBy = _calculateSpacingAdjustment(r1, r2, moveRelativeToOrigin ? origin : null),
+                                        adjustBy = moveRelativeToOrigin ? _moveRectangle(r1, r2, origin) : _calculateSpacingAdjustment(r1, r2),
+                                        constrainedAdjustment = constrain(positionArray[j][1], o2, adjustBy);
+                                        _log(positionArray[j][1], constrainedAdjustment);
+                                        o2[0] += (constrainedAdjustment.left + 1);
+                                        o2[1] += (constrainedAdjustment.top + 1);
+                                    }
                                 }
                             }
+                        } 
+                        //*/
+                    }
+
+                    if (updateOnStep)
+                        stepCallback();
+
+                    if (uncleanRun && iteration < iterations) {
+                        uncleanRun = false;
+                        iteration++;
+                        if (updateOnStep) {
+                            window.setTimeout(step, stepInterval);
                         }
-                    } 
-                    //*/
+                        else
+                            step();
+                    }
                 }
+
+            /*while (uncleanRun && iteration < iterations) {
+                uncleanRun = false;
+                step();
                 iteration++;
-            }                     
+            } */
+
+            step();                    
         };
 
 
@@ -198,9 +249,22 @@
                 getOrigin = this.getOrigin = function() { return origin; },
                 filter = params.filter || function(_) { return true; },
                 moveRelativeToOrigin = params.moveRelativeToOrigin,
-                comparator = new EntryComparator(origin),
+                comparator = new EntryComparator(origin, getSize),
                 updateOnStep = params.updateOnStep,
-                stepInterval = params.stepInterval || 350;
+                stepInterval = params.stepInterval || 350,
+                originDebugMarker;
+
+            var createOriginDebugger = function() {
+                var d = document.createElement("div");
+                d.style.position = "absolute";
+                d.style.width = "10px";
+                d.style.height = "10px";
+                d.style.backgroundColor = "red";
+                document.body.appendChild(d);
+                originDebugMarker = d;
+            };
+
+            createOriginDebugger();
 
             // if moveRelativeToOrigin we want to sort positions, so this helper method inserts
             // positions sorted. 
@@ -208,12 +272,11 @@
                 if (!moveRelativeToOrigin || positionArray.length == 0)
                     positionArray.push(p);
                 else {
-                 //   for (var i = 0; i < positionArray.length; i++) {
-                        insertSorted(positionArray, p, comparator.compare);
-                   // }
+                    insertSorted(positionArray, p, comparator.compare);                   
                 }
             };
             var _updatePositions = function() {
+                comparator.setOrigin(origin);
                 positionArray = []; positions = {}; sizes = {};
                 minx = miny = Infinity;
                 maxx = maxy = -Infinity;
@@ -246,6 +309,13 @@
                 }
             };
 
+            var setOrigin = function(o) {
+                if (o != null) {
+                    origin = o;
+                    comparator.setOrigin(o);
+                }            
+            };
+
             /**
             * @name Magnetizer#execute
             * @function
@@ -253,7 +323,7 @@
             * @param {Integer[]} [o] Optional origin to use. You may have set this in the constructor and do not wish to supply it, or you may be happy with the default of [0,0].
             */
             this.execute = function(o) {
-                if (o != null) origin = o;                            
+                setOrigin(o);
                 _updatePositions();
                 _run();
             };
@@ -267,10 +337,10 @@
             */
             this.executeAtCenter = function() {
                 _updatePositions();
-                origin = [
+                setOrigin([
                     (minx + maxx) / 2,
                     (miny + maxy) / 2
-                ];
+                ]);
                 _run();
             };
 
@@ -287,6 +357,10 @@
                     o = params.getContainerPosition(c),
                     x = e.pageX - o.left + c[0].scrollLeft, 
                     y = e.pageY - o.top + c[0].scrollTop;
+
+                originDebugMarker.style.left = e.pageX + "px";
+                originDebugMarker.style.top = e.pageY + "px";
+
                 this.execute([x,y]);
             };
 
