@@ -43,7 +43,7 @@
                 _cache = {},
                 _get = function(entry) {
                     if (!_cache[entry[1]]) {
-                        var s = getSize(entry[1]);
+                        var s = getSize(entry[2]);
                         _cache[entry[1]] = {
                             l:entry[0][0],
                             t:entry[0][1],
@@ -128,7 +128,7 @@
             return { x:o[0] - p[0], y: o[1] - p[1], w:s[0] + (2 * p[0]), h:s[1] + (2 * p[1]) };
         },
         _magnetize = function(positionArray, positions, sizes, padding, 
-            constrain, origin, filter, moveRelativeToOrigin,
+            constrain, origin, filter,
             updateOnStep, stepInterval, stepCallback) 
         {                        
             origin = origin || [0,0];
@@ -172,8 +172,7 @@
                                     // TODO instead of moving neither, the other node should move.
                                     if (filter(positionArray[j][1])) {
                                         uncleanRun = true;                                                                          
-                                        //adjustBy = _calculateSpacingAdjustment(r1, r2, moveRelativeToOrigin ? origin : null),
-                                        adjustBy = moveRelativeToOrigin ? _moveRectangle(r1, r2, origin) : _calculateSpacingAdjustment(r1, r2),
+                                        adjustBy =  _calculateSpacingAdjustment(r1, r2),
                                         constrainedAdjustment = constrain(positionArray[j][1], o2, adjustBy);
                                         _log(positionArray[j][1], constrainedAdjustment);
                                         o2[0] += (constrainedAdjustment.left + 1);
@@ -229,7 +228,7 @@
         * @param {Selector|String[]|Element[]} elements List of elements on which to operate.
         * @param {Boolean} [executeNow=false] Whether or not to execute the routine immediately.
         * @param {Function} [filter] Optional function that takes an element id and returns whether or not that element can be moved.
-        * @param {Boolean} [moveRelativeToOrigin=false] If true, elements are pushed on a line from the origin through the element's center. If false - the default - elements are pushed on a line between their center and the center of the element that is pushing them.
+        * @param {Boolean} [orderByDistanceFromOrigin=false] Whether or not to sort elements first by distance from origin. Can have better results but takes more time.
         */
         root.Magnetizer = function(params) {
             var getPosition = params.getPosition,
@@ -248,7 +247,7 @@
                 minx, miny, maxx, maxy,
                 getOrigin = this.getOrigin = function() { return origin; },
                 filter = params.filter || function(_) { return true; },
-                moveRelativeToOrigin = params.moveRelativeToOrigin,
+                orderByDistanceFromOrigin = !params.orderByDistanceFromOrigin,
                 comparator = new EntryComparator(origin, getSize),
                 updateOnStep = params.updateOnStep,
                 stepInterval = params.stepInterval || 350,
@@ -266,10 +265,10 @@
 
             createOriginDebugger();
 
-            // if moveRelativeToOrigin we want to sort positions, so this helper method inserts
+            // if orderByDistanceFromOrigin we want to sort positions, so this helper method inserts
             // positions sorted. 
             var _addToPositionArray = function(p) {
-                if (!moveRelativeToOrigin || positionArray.length == 0)
+                if (!orderByDistanceFromOrigin || positionArray.length == 0)
                     positionArray.push(p);
                 else {
                     insertSorted(positionArray, p, comparator.compare);                   
@@ -286,7 +285,7 @@
                         id = getId(elements[i]);
 
                     positions[id] = [p.left, p.top];
-                    _addToPositionArray([ [p.left, p.top], id]);
+                    _addToPositionArray([ [p.left, p.top], id, elements[i]]);
                     sizes[id] = s;
                     minx = Math.min(minx, p.left);
                     miny = Math.min(miny, p.top);
@@ -297,7 +296,7 @@
 
             var _run = function() {
                 if (elements.length > 1) {
-                    _magnetize(positionArray, positions, sizes, padding, constrain, origin, filter, moveRelativeToOrigin, updateOnStep, stepInterval, _positionElements);
+                    _magnetize(positionArray, positions, sizes, padding, constrain, origin, filter, updateOnStep, stepInterval, _positionElements);
                     _positionElements();
                 }
             };
