@@ -8,10 +8,6 @@
         jsMagnetize = root.jsMagnetize = {};
     } 
 
-    var _log = function(id, amount) {
-        console.log("Moving ", id, amount.left, amount.top)
-    }
-
     var findInsertionPoint = function(sortedArr, val, comparator) {   
            var low = 0, high = sortedArr.length;
            var mid = -1, c = 0;
@@ -129,13 +125,11 @@
                         if (filter(positionArray[i][1]) && jsPlumbGeom.intersects(focus, r1)) {
                             adjustBy = _calculateSpacingAdjustment(focus, r1);
                             constrainedAdjustment = constrain(positionArray[i][1], o1, adjustBy);
-                            _log(positionArray[i][1], constrainedAdjustment);
                             o1[0] += (constrainedAdjustment.left + 1);
                             o1[1] += (constrainedAdjustment.top + 1);
                         }
 
-                        //*
-                        //now move others to account for this one, if necessary.
+                        // now move others to account for this one, if necessary.
                         // reset rectangle for node
                         r1 = _paddedRectangle(o1, s1, padding);
                         for (var j = 0; j < positionArray.length; j++) {                        
@@ -149,19 +143,17 @@
                         
                               // if the two rectangles intersect then figure out how much to move the second one by.
                                 if (jsPlumbGeom.intersects(r1, r2)) {
-                                    // TODO instead of moving neither, the other node should move.
+                                    // TODO in 0.3, instead of moving neither, the other node should move.
                                     if (filter(positionArray[j][1])) {
                                         uncleanRun = true;                                                                          
                                         adjustBy =  _calculateSpacingAdjustment(r1, r2),
                                         constrainedAdjustment = constrain(positionArray[j][1], o2, adjustBy);
-                                        _log(positionArray[j][1], constrainedAdjustment);
                                         o2[0] += (constrainedAdjustment.left + 1);
                                         o2[1] += (constrainedAdjustment.top + 1);
                                     }
                                 }
                             }
                         } 
-                        //*/
                     }
 
                     if (updateOnStep)
@@ -176,13 +168,7 @@
                         else
                             step();
                     }
-                }
-
-            /*while (uncleanRun && iteration < iterations) {
-                uncleanRun = false;
-                step();
-                iteration++;
-            } */
+                };            
 
             step();                    
         };
@@ -227,73 +213,65 @@
                 minx, miny, maxx, maxy,
                 getOrigin = this.getOrigin = function() { return origin; },
                 filter = params.filter || function(_) { return true; },
-                orderByDistanceFromOrigin = !params.orderByDistanceFromOrigin,
+                orderByDistanceFromOrigin = params.orderByDistanceFromOrigin,
                 comparator = new EntryComparator(origin, getSize),
                 updateOnStep = params.updateOnStep,
                 stepInterval = params.stepInterval || 350,
-                originDebugMarker;
+                originDebugMarker,
+                debug = params.debug,
+                createOriginDebugger = function() {
+                    var d = document.createElement("div");
+                    d.style.position = "absolute";
+                    d.style.width = "10px";
+                    d.style.height = "10px";
+                    d.style.backgroundColor = "red";
+                    document.body.appendChild(d);
+                    originDebugMarker = d;
+                },
+                _addToPositionArray = function(p) {
+                    if (!orderByDistanceFromOrigin || positionArray.length == 0)
+                        positionArray.push(p);
+                    else {
+                        insertSorted(positionArray, p, comparator.compare);                   
+                    }
+                },
+                _updatePositions = function() {
+                    comparator.setOrigin(origin);
+                    positionArray = []; positions = {}; sizes = {};
+                    minx = miny = Infinity;
+                    maxx = maxy = -Infinity;
+                    for (var i = 0; i < elements.length; i++) {
+                        var p = getPosition(elements[i]),
+                            s = getSize(elements[i]),
+                            id = getId(elements[i]);
 
-            var createOriginDebugger = function() {
-                var d = document.createElement("div");
-                d.style.position = "absolute";
-                d.style.width = "10px";
-                d.style.height = "10px";
-                d.style.backgroundColor = "red";
-                document.body.appendChild(d);
-                originDebugMarker = d;
-            };
-
-            createOriginDebugger();
-
-            // if orderByDistanceFromOrigin we want to sort positions, so this helper method inserts
-            // positions sorted. 
-            var _addToPositionArray = function(p) {
-                if (!orderByDistanceFromOrigin || positionArray.length == 0)
-                    positionArray.push(p);
-                else {
-                    insertSorted(positionArray, p, comparator.compare);                   
-                }
-            };
-            var _updatePositions = function() {
-                comparator.setOrigin(origin);
-                positionArray = []; positions = {}; sizes = {};
-                minx = miny = Infinity;
-                maxx = maxy = -Infinity;
-                for (var i = 0; i < elements.length; i++) {
-                    var p = getPosition(elements[i]),
-                        s = getSize(elements[i]),
-                        id = getId(elements[i]);
-
-                    positions[id] = [p.left, p.top];
-                    _addToPositionArray([ [p.left, p.top], id, elements[i]]);
-                    sizes[id] = s;
-                    minx = Math.min(minx, p.left);
-                    miny = Math.min(miny, p.top);
-                    maxx = Math.max(maxx, p.left + s[0]);
-                    maxy = Math.max(maxy, p.top + s[1]);
-                }
-            };
-
-            var _run = function() {
-                if (elements.length > 1) {
-                    _magnetize(positionArray, positions, sizes, padding, constrain, origin, filter, updateOnStep, stepInterval, _positionElements);
-                    _positionElements();
-                }
-            };
-
-            var _positionElements = function() {
-                for (var i = 0; i < elements.length; i++) {
-                    var id = getId(elements[i]);
-                    setPosition(elements[i], { left:positions[id][0], top:positions[id][1] });
-                }
-            };
-
-            var setOrigin = function(o) {
-                if (o != null) {
-                    origin = o;
-                    comparator.setOrigin(o);
-                }            
-            };
+                        positions[id] = [p.left, p.top];
+                        _addToPositionArray([ [p.left, p.top], id, elements[i]]);
+                        sizes[id] = s;
+                        minx = Math.min(minx, p.left);
+                        miny = Math.min(miny, p.top);
+                        maxx = Math.max(maxx, p.left + s[0]);
+                        maxy = Math.max(maxy, p.top + s[1]);
+                    }
+                },
+                _run = function() {
+                    if (elements.length > 1) {
+                        _magnetize(positionArray, positions, sizes, padding, constrain, origin, filter, updateOnStep, stepInterval, _positionElements);
+                        _positionElements();
+                    }
+                },
+                _positionElements = function() {
+                    for (var i = 0; i < elements.length; i++) {
+                        var id = getId(elements[i]);
+                        setPosition(elements[i], { left:positions[id][0], top:positions[id][1] });
+                    }
+                },
+                setOrigin = function(o) {
+                    if (o != null) {
+                        origin = o;
+                        comparator.setOrigin(o);
+                    }            
+                };
 
             /**
             * @name Magnetizer#execute
@@ -305,9 +283,7 @@
                 setOrigin(o);
                 _updatePositions();
                 _run();
-            };
-
-            if (executeNow) this.execute();
+            };            
 
             /**
             * @name Magnetizer#executeAtCenter
@@ -337,8 +313,10 @@
                     x = e.pageX - o.left + c[0].scrollLeft, 
                     y = e.pageY - o.top + c[0].scrollTop;
 
-                originDebugMarker.style.left = e.pageX + "px";
-                originDebugMarker.style.top = e.pageY + "px";
+                if (debug) {
+                    originDebugMarker.style.left = e.pageX + "px";
+                    originDebugMarker.style.top = e.pageY + "px";
+                }
 
                 this.execute([x,y]);
             };
@@ -352,7 +330,13 @@
             this.setElements = function(_els) {
                 elements = _els;
             };
-        };
 
+
+            if (debug)
+                createOriginDebugger();
+
+            if (executeNow) this.execute();
+
+        };
 }).call(this);        
 
