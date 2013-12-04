@@ -103,26 +103,6 @@
 
             return _genAdj(r1, r2, m, b, s);        
         },    
-        //
-        // moves r2 on a vector joining origin (O) to the center of r2 (CR2), to such a position that it no longer
-        // overlaps r1. This means finding the angle of the vector between O and CR2, and it segment.  depending on the
-        // segment you then move one of the corners of r2 horizontally, and adjust its vertical position using 
-        // thwe angle of the vector.
-        _moveRectangle = function(r1, r2, origin) {
-            var c1 = origin,
-                c2 = r2.center || [ r2.x + (r2.w / 2), r2.y + (r2.h / 2) ],
-                m = jsPlumbGeom.gradient(c1, c2),
-                s = jsPlumbGeom.quadrant(c1, c2),
-                b = (m == Infinity || m == -Infinity || isNaN(m)) ? 0 : c1[1] - (m * c1[0]),
-                xAdj = _adj[s][0](r1, r2),
-                theta = Math.atan(m),
-                hyp = xAdj / Math.cos(theta),
-                yAdj = hyp * Math.sin(theta)
-
-                console.log("i would adjust X by ", xAdj);
-
-                return {left:xAdj,top:yAdj};           
-        },
         // calculate a padded rectangle for the given element with offset & size, and desired padding.
         _paddedRectangle = jsMagnetize.paddedRectangle = function(o, s, p) {
             return { x:o[0] - p[0], y: o[1] - p[1], w:s[0] + (2 * p[0]), h:s[1] + (2 * p[1]) };
