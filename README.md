@@ -4,7 +4,7 @@ This is a small utility that provides a means for "magnetizing" a set of element
 
 Currently, all elements are assumed to have the same "charge", which is to say that every element repels every other element.  It is possible that a future version of this utility could allow for elements to possess different charges.
 
-***** This project used to be called `jsMagnetize`.
+***** This project used to be called **jsMagnetize**.
 
 #### Demonstration
 
@@ -55,7 +55,7 @@ This method computes the logical center of all the elements and uses that as the
 
 This method takes some event and maps its location to your coordinate space, using that value as the magnetization origin.
 
-#### Filtering Elements (0.2+)
+#### Filtering Elements
 
 You can provide a `filter` function which, when passed the id of some element, should return true if the
 element may move, or false if it may not:
