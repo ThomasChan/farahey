@@ -1,16 +1,18 @@
-### jsMagnetize
+### Farahey
 
 This is a small utility that provides a means for "magnetizing" a set of elements such that no element overlaps another, and any two elements are at least some minimum distance apart.
 
 Currently, all elements are assumed to have the same "charge", which is to say that every element repels every other element.  It is possible that a future version of this utility could allow for elements to possess different charges.
 
+***** This project used to be called `jsMagnetize`.
+
 #### Demonstration
 
-You can see a demonstration [here](http://morrisonpitt.com/jsMagnetize).
+You can see a demonstration [here](http://morrisonpitt.com/farahey).
 
 #### Dependencies
 
-jsMagnetize has a dependency on [jsplumb-geom](https://github.com/sporritt/jsplumb-geom). If you have [jsPlumb](https://github.com/sporritt/jsPlumb) in your page then jsplumb-geom is already available to you.
+Farahey has a dependency on [Biltong](https://github.com/sporritt/biltong). If you have [jsPlumb](https://github.com/sporritt/jsPlumb) in your page then Biltong is already available to you.
 
 #### Magnetizing
 
@@ -109,17 +111,17 @@ This is the full list of constructor parameters:
 
 A couple of internal methods are exposed for external use (because for the context in which I'm using this I need these methods and it seemed a shame to duplicate them):
 
-- jsMagnetize.paddedRectangle = function(o, s, p) { ... }
+- Farahey.paddedRectangle = function(o, s, p) { ... }
 
 Takes three arrays - `o` is the element's offset, `s` is its size, and `p` is the desired padding in each axis, and returns a rectangle that pads the element with the desired padding values.
 
-- jsMagnetize.calculateSpacingAdjustment = function(r1, r2, angle) { ... }
+- Farahey.calculateSpacingAdjustment = function(r1, r2, angle) { ... }
 
 Takes two rectangles in the form `{ x:..., y:..., w:..., h:... }` and calculates how far to move r2 such that the two rectangles do not overlap.  `angle` denotes the angle of travel for r2, and if not supplied is calculated by drawing a line between the centers of the two rectangles.
 
 #### Examples
 
-This is the source from the various examples on the [demo page](http://morrisonpitt.com/jsMagnetize).
+This is the source from the various examples on the [demo page](http://morrisonpitt.com/farahey).
 
 ##### 1. click to magnetize at event location
 
