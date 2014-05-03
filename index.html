@@ -11,6 +11,7 @@
 			<p>
 			Using some given origin, elements are pushed away from that point such that no two elements overlap each other, and the spacing between them is at least as large as the specified padding. 
 			</p>
+			<a href="https://github.com/jsplumb/farahey" style="font-size:11px;">[ Farahey Me On Github ]</a>
 		</div>
 		
 		<!-- click to magnetize at event location -->
@@ -48,6 +49,7 @@
 		<!-- click to magnetize and constrain elements to a grid -->
 		<div id="demo4" class="demo">			
 			<h4>click to magnetize and constrain elements to a grid</h4>
+			<h6>magnetization origin is the center of the elements</h6>
 			<div id="d4_w1" class="w w1" style="left:208px;top:208px;">one</div>
 			<div id="d4_w2" class="w w2" style="top:272px;left:192px;">two</div>
 			<div id="d4_w3" class="w w3" style="top:336px;left:336px;">three</div>				
@@ -79,6 +81,7 @@
 		<!-- magnetization with static elements -->
 		<div id="demo7" class="demo">	
 			<h4>filter by clicked element</h4>		
+			<h6>magnetization origin is the location of the event</h6>
 			<div id="d7_w1" class="w w1" style="left:208px;top:208px;">one</div>
 			<div id="d7_w2" class="w w2" style="top:272px;left:192px;">two</div>
 			<div id="d7_w3" class="w w3" style="top:336px;left:336px;">three</div>				
@@ -88,7 +91,8 @@
 
 		<!-- magnetization with drag+jsplumb -->
 		<div id="demo8" class="demo">	
-			<h4>jsPlumb+drag</h4>		
+			<h4>jsPlumb+drag</h4>	
+			<h6>magnetization origin is the location of the mouse pointer; the drag element does not get moved</h6>	
 			<div id="d8_w1" class="w w1" style="left:208px;top:208px;">one</div>
 			<div id="d8_w2" class="w w2" style="top:272px;left:192px;">two</div>
 			<div id="d8_w3" class="w w3" style="top:336px;left:336px;">three</div>				
@@ -248,6 +252,14 @@
 
 // ------------------------   demo 8. magnetize while dragging, with jsplumb -------------------	
 				jsPlumb.ready(function() {
+
+					jsPlumb.importDefaults({
+						Connector:"StateMachine",
+						Anchor:"AutoDefault",
+						PaintStyle:{lineWidth:3, strokeStyle:"orange"},
+						Endpoint:["Dot", { radius:13 }],
+						EndpointStyle:{ fillStyle:"orange" }
+					})
 
 					// just some plumbing for the purposes of the demo
 					jsPlumb.connect({source:"d8_w1", target:"d8_w5"});
