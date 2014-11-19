@@ -101,11 +101,10 @@
 		</div>
 	
 	 	<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
-	 	<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js'></script>
 		<script src="lib/biltong-0.2.js"></script>
 		<script src="src/farahey-0.5.js"></script>
 
-		<script src="demo-lib/dom.jsPlumb-1.6.0-min.js"></script>
+		<script src="demo-lib/dom.jsPlumb-1.7.3-min.js"></script>
 					 
 		<script>
 			
@@ -133,8 +132,6 @@
 
 // -------------------------------------------------------------------------------------------		
 
-			// all divs are draggable
-			$(".w").draggable();		
 
 // ------------------------   demo 1. click to magnetize at event location -------------------
 
@@ -147,6 +144,8 @@
 					getContainerPosition:function(c) { return c.offset(); },
 					elements:["d1_w5", "d1_w4", "d1_w1", "d1_w2", "d1_w3"]
 				});
+                // all divs are draggable
+                jsPlumb.draggable($("#demo1 .w"));
 				$("#demo1").bind("click", function(e) { m1.executeAtEvent(e); });
 
 
@@ -160,6 +159,7 @@
 					setPosition:_setOffset,
 					elements:["d2_w5", "d2_w4", "d2_w1", "d2_w2", "d2_w3"]
 				});
+                jsPlumb.draggable($("#demo2 .w"));
 				$("#demo2").bind("click", function(e) { m2.executeAtCenter(); });
 
 
@@ -172,6 +172,7 @@
 					setPosition:_setOffset,
 					elements:["d3_w5", "d3_w4", "d3_w1", "d3_w2", "d3_w3"]
 				});
+                jsPlumb.draggable($("#demo3 .w"));
 				$("#demo3").bind("click", function(e) { m3.execute([150,150]); });
 
 // ------------------------   demo 4. click to magnetize at event location with grid constrain -------------------	
@@ -194,8 +195,8 @@
 					elements:["d4_w5", "d4_w4", "d4_w1", "d4_w2", "d4_w3"],
 					getContainerPosition:function(c) { return c.offset(); },
 					constrain:gridConstrain(20,20)
-
 				});
+                jsPlumb.draggable($("#demo4 .w"));
 				$("#demo4").bind("click", function(e) { m4.executeAtEvent(e); });		
 
 // ------------------------   demo 5. continuous magnetization -------------------	
@@ -208,8 +209,8 @@
 					setPosition:_setOffset,
 					elements:["d5_w5", "d5_w4", "d5_w1", "d5_w2", "d5_w3"],
 					getContainerPosition:function(c) { return c.offset(); }
-
 				});
+                jsPlumb.draggable($("#demo5 .w"));
 				$("#demo5").bind("mousemove", function(e) { m5.executeAtEvent(e); });			
 
 // ------------------------   demo 6. continuous magnetization with grid -------------------	
@@ -223,8 +224,8 @@
 					elements:["d6_w5", "d6_w4", "d6_w1", "d6_w2", "d6_w3"],
 					getContainerPosition:function(c) { return c.offset(); },
 					constrain:gridConstrain(20,20)
-
 				});
+                jsPlumb.draggable($("#demo6 .w"));
 				$("#demo6").bind("mousemove", function(e) { m6.executeAtEvent(e); });							
 
 
@@ -244,6 +245,7 @@
 					elements:["d7_w5", "d7_w4", "d7_w1", "d7_w2", "d7_w3"],
 					filter:_filter
 				});
+                jsPlumb.draggable($("#demo7 .w"));
 				$("#demo7 div").bind("click", function(e) { 
 					_elsToFilter = {};
 					_elsToFilter[$(this).attr("id")] = true;
@@ -259,7 +261,7 @@
 						PaintStyle:{lineWidth:3, strokeStyle:"orange"},
 						Endpoint:["Dot", { radius:13 }],
 						EndpointStyle:{ fillStyle:"orange" }
-					})
+					});
 
 					// just some plumbing for the purposes of the demo
 					jsPlumb.connect({source:"d8_w1", target:"d8_w5"});
