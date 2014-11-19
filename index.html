@@ -99,10 +99,20 @@
 			<div id="d8_w4" class="w w4" style="top:96px;left:288px;">four</div>	
 			<div id="d8_w5" class="w w5" style="top:160px;left:160px;">five</div>	
 		</div>
+
+        <!-- click to magnetize at center of elements, using object hash instead of array -->
+        <div id="demo9" class="demo">
+            <h4>click to magnetize using the center of the elements as the origin (elements supplied as object hash)</h4>
+            <div id="d9_w1" class="w w1" style="left:208px;top:208px;">one</div>
+            <div id="d9_w2" class="w w2" style="top:272px;left:192px;">two</div>
+            <div id="d9_w3" class="w w3" style="top:336px;left:336px;">three</div>
+            <div id="d9_w4" class="w w4" style="top:96px;left:288px;">four</div>
+            <div id="d9_w5" class="w w5" style="top:160px;left:160px;">five</div>
+        </div>
 	
 	 	<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
 		<script src="lib/biltong-0.2.js"></script>
-		<script src="src/farahey-0.5.js"></script>
+		<script src="src/farahey-0.6.js"></script>
 
 		<script src="demo-lib/dom.jsPlumb-1.7.3-min.js"></script>
 					 
@@ -308,8 +318,32 @@
 					});
 					
 				})
-					
 
+// ------------------------   demo 9. click to magnetize at event location, elements are supplied as object hash instead of array -------------------
+
+                var m9 = new Magnetizer({
+                    container:$("#demo9"),
+                    getPosition:function(obj) {
+                        return _offset(obj.id);
+                    },
+                    getSize:function(obj) { return [ $("#" + obj.id).outerWidth(), $("#" + obj.id).outerHeight() ]; },
+                    getId : function(obj) { return obj.id; },
+                    setPosition:function(obj, o) {
+                        _setOffset(obj.id, o);
+                    },
+                    getContainerPosition:function(c) { return c.offset(); },
+                    //elements:[{id:"d9_w5"}, {id:"d9_w4"}, {id:"d9_w1"}, {id:"d9_w2"}, {id:"d9_w3"}]
+                    elements:{
+                        "1":{id:"d9_w5"},
+                        "2":{id:"d9_w4"},
+                        "3":{id:"d9_w1"},
+                        "4":{id:"d9_w2"},
+                        "5":{id:"d9_w3"}
+                    }
+                });
+                // all divs are draggable
+                jsPlumb.draggable($("#demo9 .w"));
+                $("#demo9").bind("click", function(e) { m9.executeAtEvent(e); });
 
 			});	
 
