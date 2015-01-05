@@ -185,7 +185,11 @@
 
     var _convertElements = function(l) {
         if (l == null) return null;
-        else if (Object.prototype.toString.call(l) === "[object Array]") return l;
+        else if (Object.prototype.toString.call(l) === "[object Array]") {
+            var a = [];
+            a.push.apply(a, l);
+            return a;
+        }
         else {
             var o = [];
             for (var i in l) o.push(l[i]);
