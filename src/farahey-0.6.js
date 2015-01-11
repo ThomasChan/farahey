@@ -144,20 +144,19 @@
                         r1 = _paddedRectangle(o1, s1, padding);
                         for (var j = 0; j < positionArray.length; j++) {
                             if (i != j) {
-                                var o2 = positions[positionArray[j][1]],
-                                    a2 = positionArray[j][2], // angle to node from magnet origin
-                                    s2 = sizes[positionArray[j][1]],
-                                // create a rectangle for the second element, again by putting padding of the desired
-                                // amount around the bounds of the element.
-                                    r2 = _paddedRectangle(o2, s2, padding);
+                                if (filter(positionArray[j][1])) {
+                                    var o2 = positions[positionArray[j][1]],
+                                        s2 = sizes[positionArray[j][1]],
+                                    // create a rectangle for the second element, again by putting padding of the desired
+                                    // amount around the bounds of the element.
+                                        r2 = _paddedRectangle(o2, s2, padding);
 
-                                // if the two rectangles intersect then figure out how much to move the second one by.
-                                if (geomSupport.intersects(r1, r2)) {
-                                    // TODO (?), instead of moving neither, the other node should move.
-                                    if (filter(positionArray[j][1])) {
+                                    // if the two rectangles intersect then figure out how much to move the second one by.
+                                    if (geomSupport.intersects(r1, r2)) {
+                                        // TODO (?), instead of moving neither, the other node should move.
                                         uncleanRun = true;
-                                        adjustBy =  _calculateSpacingAdjustment(r1, r2),
-                                            constrainedAdjustment = constrain(positionArray[j][1], o2, adjustBy);
+                                        adjustBy = _calculateSpacingAdjustment(r1, r2);
+                                        constrainedAdjustment = constrain(positionArray[j][1], o2, adjustBy);
                                         _move(positionArray[j][1], o2, constrainedAdjustment.left, constrainedAdjustment.top);
                                     }
                                 }
