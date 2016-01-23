@@ -6,9 +6,6 @@ Currently, all elements are assumed to have the same "charge", which is to say t
 
 ***** This project used to be called **jsMagnetize**.
 
-#### Demonstration
-
-You can see a demonstration [here](http://morrisonpitt.com/farahey).
 
 #### Dependencies
 
