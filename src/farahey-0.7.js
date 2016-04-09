@@ -349,6 +349,7 @@
 
         /**
          * Adds the given element to the set of elements on which to operate.
+         * @method addElement
          * @param el {Object} Element to add.
          */
         this.addElement = function(el) {
@@ -357,6 +358,7 @@
 
         /**
          * Removes the given element from the set of elements on which to operate.
+         * @method removeElement
          * @param el {Object} Element to remove.
          */
         this.removeElement = function(el) {
@@ -371,6 +373,7 @@
 
         /**
          * Sets the padding to insert between magnetized elements.
+         * @method setPadding
          * @param {Number[]} p Array of padding for each axis.
          */
         this.setPadding = function(p) {
@@ -382,18 +385,29 @@
          * The function is given an element ID and an array of [x,y] values, where each value indicates the proposed amount
          * of movement in the given axis. The function is expected to return an array of [x,y] that indicates the allowed
          * amount of movement in each axis.
+         * @method setConstrain
          * @param {Function} c
          */
-        this.setConstrain = function(f) {
+        this.setConstrain = function(c) {
             constrain = c;
         };
 
         /**
          * Sets the function used to determine whether or not a given element should be considered during the magnetization process.
+         * @method setFilter
          * @param {Function} f Filter function to use. Takes an element ID and returns whether or not that element can be moved.
          */
         this.setFilter = function(f) {
             filter = f;
+        };
+
+
+        /**
+         * Reset the Farahey instance. Use this to avoid memory leaks.
+         * @method reset
+         */
+        this.reset = function() {
+            elements.length = 0;
         };
 
         if (debug)

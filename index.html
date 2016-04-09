@@ -1,354 +1,428 @@
 <!doctype html>
 <html>
-	<head>
-		<title>Farahey test page</title>
-		<link rel="stylesheet" href="index.css">
-	</head>
-	<body>	
-		<div id="blurb">
-			<h4>Farahey</h4>
-			Provides a simple way to separate elements from each other. 
-			<p>
-			Using some given origin, elements are pushed away from that point such that no two elements overlap each other, and the spacing between them is at least as large as the specified padding. 
-			</p>
-			<a href="https://github.com/jsplumb/farahey" style="font-size:11px;">[ Farahey Me On Github ]</a>
-		</div>
-		
-		<!-- click to magnetize at event location -->
-		<div id="demo1" class="demo">			
-			<h4>click to magnetize using event location as the origin</h4>
-			<div id="d1_w1" class="w w1" style="left:208px;top:208px;">one</div>
-			<div id="d1_w2" class="w w2" style="top:272px;left:192px;">two</div>
-			<div id="d1_w3" class="w w3" style="top:336px;left:336px;">three</div>				
-			<div id="d1_w4" class="w w4" style="top:96px;left:288px;">four</div>	
-			<div id="d1_w5" class="w w5" style="top:160px;left:160px;">five</div>				
-		</div>
-		
-		<!-- click to magnetize at center of elements -->
-		<div id="demo2" class="demo">			
-			<h4>click to magnetize using the center of the elements as the origin</h4>
-			<div id="d2_w1" class="w w1" style="left:208px;top:208px;">one</div>
-			<div id="d2_w2" class="w w2" style="top:272px;left:192px;">two</div>
-			<div id="d2_w3" class="w w3" style="top:336px;left:336px;">three</div>				
-			<div id="d2_w4" class="w w4" style="top:96px;left:288px;">four</div>	
-			<div id="d2_w5" class="w w5" style="top:160px;left:160px;">five</div>
-		</div>
-			
-		
-		<!-- click to magnetize at fixed position -->
-		<div id="demo3" class="demo">			
-			<h4>click to magnetize using a fixed location of [150,150] as the origin</h4>
-			<div id="d3_w1" class="w w1" style="left:208px;top:208px;">one</div>
-			<div id="d3_w2" class="w w2" style="top:272px;left:192px;">two</div>
-			<div id="d3_w3" class="w w3" style="top:336px;left:336px;">three</div>				
-			<div id="d3_w4" class="w w4" style="top:96px;left:288px;">four</div>	
-			<div id="d3_w5" class="w w5" style="top:160px;left:160px;">five</div>
-		</div>
+<head>
+    <title>Farahey test page</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+<div id="blurb">
+    <h4>Farahey</h4>
+    Provides a simple way to separate elements from each other.
+    <p>
+        Using some given origin, elements are pushed away from that point such that no two elements overlap each other,
+        and the spacing between them is at least as large as the specified padding.
+    </p>
+    <a href="https://github.com/jsplumb/farahey" style="font-size:11px;">[ Farahey Me On Github ]</a>
+</div>
+
+<!-- click to magnetize at event location -->
+<div id="demo1" class="demo">
+    <h4>click to magnetize using event location as the origin</h4>
+
+    <div id="d1_w1" class="w w1" style="left:208px;top:208px;">one</div>
+    <div id="d1_w2" class="w w2" style="top:272px;left:192px;">two</div>
+    <div id="d1_w3" class="w w3" style="top:336px;left:336px;">three</div>
+    <div id="d1_w4" class="w w4" style="top:96px;left:288px;">four</div>
+    <div id="d1_w5" class="w w5" style="top:160px;left:160px;">five</div>
+</div>
+
+<!-- click to magnetize at center of elements -->
+<div id="demo2" class="demo">
+    <h4>click to magnetize using the center of the elements as the origin</h4>
+
+    <div id="d2_w1" class="w w1" style="left:208px;top:208px;">one</div>
+    <div id="d2_w2" class="w w2" style="top:272px;left:192px;">two</div>
+    <div id="d2_w3" class="w w3" style="top:336px;left:336px;">three</div>
+    <div id="d2_w4" class="w w4" style="top:96px;left:288px;">four</div>
+    <div id="d2_w5" class="w w5" style="top:160px;left:160px;">five</div>
+</div>
 
 
-		<!-- click to magnetize and constrain elements to a grid -->
-		<div id="demo4" class="demo">			
-			<h4>click to magnetize and constrain elements to a grid</h4>
-			<h6>magnetization origin is the center of the elements</h6>
-			<div id="d4_w1" class="w w1" style="left:208px;top:208px;">one</div>
-			<div id="d4_w2" class="w w2" style="top:272px;left:192px;">two</div>
-			<div id="d4_w3" class="w w3" style="top:336px;left:336px;">three</div>				
-			<div id="d4_w4" class="w w4" style="top:96px;left:288px;">four</div>	
-			<div id="d4_w5" class="w w5" style="top:160px;left:160px;">five</div>
-		</div>
+<!-- click to magnetize at fixed position -->
+<div id="demo3" class="demo">
+    <h4>click to magnetize using a fixed location of [150,150] as the origin</h4>
+
+    <div id="d3_w1" class="w w1" style="left:208px;top:208px;">one</div>
+    <div id="d3_w2" class="w w2" style="top:272px;left:192px;">two</div>
+    <div id="d3_w3" class="w w3" style="top:336px;left:336px;">three</div>
+    <div id="d3_w4" class="w w4" style="top:96px;left:288px;">four</div>
+    <div id="d3_w5" class="w w5" style="top:160px;left:160px;">five</div>
+</div>
 
 
-		<!-- continuous magnetization -->
-		<div id="demo5" class="demo">	
-			<h4>continuous magnetization: move the mouse around</h4>		
-			<div id="d5_w1" class="w w1" style="left:208px;top:208px;">one</div>
-			<div id="d5_w2" class="w w2" style="top:272px;left:192px;">two</div>
-			<div id="d5_w3" class="w w3" style="top:336px;left:336px;">three</div>				
-			<div id="d5_w4" class="w w4" style="top:96px;left:288px;">four</div>	
-			<div id="d5_w5" class="w w5" style="top:160px;left:160px;">five</div>				
-		</div>
+<!-- click to magnetize and constrain elements to a grid -->
+<div id="demo4" class="demo">
+    <h4>click to magnetize and constrain elements to a grid</h4>
+    <h6>magnetization origin is the center of the elements</h6>
 
-		<!-- continuous magnetization with grid constrain -->
-		<div id="demo6" class="demo">	
-			<h4>continuous magnetization with grid constrain: move the mouse around</h4>		
-			<div id="d6_w1" class="w w1" style="left:208px;top:208px;">one</div>
-			<div id="d6_w2" class="w w2" style="top:272px;left:192px;">two</div>
-			<div id="d6_w3" class="w w3" style="top:336px;left:336px;">three</div>				
-			<div id="d6_w4" class="w w4" style="top:96px;left:288px;">four</div>	
-			<div id="d6_w5" class="w w5" style="top:160px;left:160px;">five</div>	
-		</div>
+    <div id="d4_w1" class="w w1" style="left:208px;top:208px;">one</div>
+    <div id="d4_w2" class="w w2" style="top:272px;left:192px;">two</div>
+    <div id="d4_w3" class="w w3" style="top:336px;left:336px;">three</div>
+    <div id="d4_w4" class="w w4" style="top:96px;left:288px;">four</div>
+    <div id="d4_w5" class="w w5" style="top:160px;left:160px;">five</div>
+</div>
 
-		<!-- magnetization with static elements -->
-		<div id="demo7" class="demo">	
-			<h4>filter by clicked element</h4>		
-			<h6>magnetization origin is the location of the event</h6>
-			<div id="d7_w1" class="w w1" style="left:208px;top:208px;">one</div>
-			<div id="d7_w2" class="w w2" style="top:272px;left:192px;">two</div>
-			<div id="d7_w3" class="w w3" style="top:336px;left:336px;">three</div>				
-			<div id="d7_w4" class="w w4" style="top:96px;left:288px;">four</div>	
-			<div id="d7_w5" class="w w5" style="top:160px;left:160px;">five</div>	
-		</div>
 
-		<!-- magnetization with drag+jsplumb -->
-		<div id="demo8" class="demo">	
-			<h4>jsPlumb+drag</h4>	
-			<h6>magnetization origin is the location of the mouse pointer; the drag element does not get moved</h6>	
-			<div id="d8_w1" class="w w1" style="left:208px;top:208px;">one</div>
-			<div id="d8_w2" class="w w2" style="top:272px;left:192px;">two</div>
-			<div id="d8_w3" class="w w3" style="top:336px;left:336px;">three</div>				
-			<div id="d8_w4" class="w w4" style="top:96px;left:288px;">four</div>	
-			<div id="d8_w5" class="w w5" style="top:160px;left:160px;">five</div>	
-		</div>
+<!-- continuous magnetization -->
+<div id="demo5" class="demo">
+    <h4>continuous magnetization: move the mouse around</h4>
 
-        <!-- click to magnetize at center of elements, using object hash instead of array -->
-        <div id="demo9" class="demo">
-            <h4>click to magnetize using the center of the elements as the origin (elements supplied as object hash)</h4>
-            <div id="d9_w1" class="w w1" style="left:208px;top:208px;">one</div>
-            <div id="d9_w2" class="w w2" style="top:272px;left:192px;">two</div>
-            <div id="d9_w3" class="w w3" style="top:336px;left:336px;">three</div>
-            <div id="d9_w4" class="w w4" style="top:96px;left:288px;">four</div>
-            <div id="d9_w5" class="w w5" style="top:160px;left:160px;">five</div>
-        </div>
-	
-	 	<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
-		<script src="lib/biltong-0.2.js"></script>
-		<script src="src/farahey-0.6.js"></script>
+    <div id="d5_w1" class="w w1" style="left:208px;top:208px;">one</div>
+    <div id="d5_w2" class="w w2" style="top:272px;left:192px;">two</div>
+    <div id="d5_w3" class="w w3" style="top:336px;left:336px;">three</div>
+    <div id="d5_w4" class="w w4" style="top:96px;left:288px;">four</div>
+    <div id="d5_w5" class="w w5" style="top:160px;left:160px;">five</div>
+</div>
 
-		<script src="demo-lib/dom.jsPlumb-1.7.3-min.js"></script>
-					 
-		<script>
-			
-			$(function() {		
+<!-- continuous magnetization with grid constrain -->
+<div id="demo6" class="demo">
+    <h4>continuous magnetization with grid constrain: move the mouse around</h4>
+
+    <div id="d6_w1" class="w w1" style="left:208px;top:208px;">one</div>
+    <div id="d6_w2" class="w w2" style="top:272px;left:192px;">two</div>
+    <div id="d6_w3" class="w w3" style="top:336px;left:336px;">three</div>
+    <div id="d6_w4" class="w w4" style="top:96px;left:288px;">four</div>
+    <div id="d6_w5" class="w w5" style="top:160px;left:160px;">five</div>
+</div>
+
+<!-- magnetization with static elements -->
+<div id="demo7" class="demo">
+    <h4>filter by clicked element</h4>
+    <h6>magnetization origin is the location of the event</h6>
+
+    <div id="d7_w1" class="w w1" style="left:208px;top:208px;">one</div>
+    <div id="d7_w2" class="w w2" style="top:272px;left:192px;">two</div>
+    <div id="d7_w3" class="w w3" style="top:336px;left:336px;">three</div>
+    <div id="d7_w4" class="w w4" style="top:96px;left:288px;">four</div>
+    <div id="d7_w5" class="w w5" style="top:160px;left:160px;">five</div>
+</div>
+
+<!-- magnetization with drag+jsplumb -->
+<div id="demo8" class="demo">
+    <h4>jsPlumb+drag</h4>
+    <h6>magnetization origin is the location of the mouse pointer; the drag element does not get moved</h6>
+
+    <div id="d8_w1" class="w w1" style="left:208px;top:208px;">one</div>
+    <div id="d8_w2" class="w w2" style="top:272px;left:192px;">two</div>
+    <div id="d8_w3" class="w w3" style="top:336px;left:336px;">three</div>
+    <div id="d8_w4" class="w w4" style="top:96px;left:288px;">four</div>
+    <div id="d8_w5" class="w w5" style="top:160px;left:160px;">five</div>
+</div>
+
+<!-- click to magnetize at center of elements, using object hash instead of array -->
+<div id="demo9" class="demo">
+    <h4>click to magnetize using the center of the elements as the origin (elements supplied as object hash)</h4>
+
+    <div id="d9_w1" class="w w1" style="left:208px;top:208px;">one</div>
+    <div id="d9_w2" class="w w2" style="top:272px;left:192px;">two</div>
+    <div id="d9_w3" class="w w3" style="top:336px;left:336px;">three</div>
+    <div id="d9_w4" class="w w4" style="top:96px;left:288px;">four</div>
+    <div id="d9_w5" class="w w5" style="top:160px;left:160px;">five</div>
+</div>
+
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
+<script src="lib/biltong-0.2.js"></script>
+<script src="src/farahey-0.7.js"></script>
+
+<script src="demo-lib/dom.jsPlumb-1.7.3-min.js"></script>
+
+<script>
+
+$(function () {
 
 // ------------------ helper methods to get/set absolute positions ---------------------------
 
-				var _offset = function(id) {
-					var el = $("#" + id)[0],
-						_ = function(p) {
-							var v = el.style[p];
-							return parseInt(v.substring(0, v.length - 2));
-						};
-					return {
-						left:_("left"),
-						top:_("top")
-					};
-				};
+    var _offset = function (id) {
+        var el = $("#" + id)[0],
+                _ = function (p) {
+                    var v = el.style[p];
+                    return parseInt(v.substring(0, v.length - 2));
+                };
+        return {
+            left: _("left"),
+            top: _("top")
+        };
+    };
 
-				var _setOffset = function(id, o) {
-					var el = $("#" + id)[0];
-					el.style.left = o.left + "px";
-					el.style.top = o.top + "px";
-				};
+    var _setOffset = function (id, o) {
+        var el = $("#" + id)[0];
+        el.style.left = o.left + "px";
+        el.style.top = o.top + "px";
+    };
 
 // -------------------------------------------------------------------------------------------		
 
 
 // ------------------------   demo 1. click to magnetize at event location -------------------
 
-				var m1 = new Magnetizer({
-					container:$("#demo1"),
-					getPosition:_offset,
-					getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
-					getId : function(id) { return id; },
-					setPosition:_setOffset,
-					getContainerPosition:function(c) { return c.offset(); },
-					elements:["d1_w5", "d1_w4", "d1_w1", "d1_w2", "d1_w3"]
-				});
-                // all divs are draggable
-                jsPlumb.draggable($("#demo1 .w"));
-				$("#demo1").bind("click", function(e) { m1.executeAtEvent(e); });
+    var m1 = new Magnetizer({
+        container: $("#demo1"),
+        getPosition: _offset,
+        getSize: function (id) {
+            return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ];
+        },
+        getId: function (id) {
+            return id;
+        },
+        setPosition: _setOffset,
+        getContainerPosition: function (c) {
+            return c.offset();
+        },
+        elements: ["d1_w5", "d1_w4", "d1_w1", "d1_w2", "d1_w3"]
+    });
+    // all divs are draggable
+    jsPlumb.draggable($("#demo1 .w"));
+    $("#demo1").bind("click", function (e) {
+        m1.executeAtEvent(e);
+    });
 
 
 // ------------------------   demo 2. click to magnetize at center of elements -------------------	
 
 
-				var m2 = new Magnetizer({
-					getPosition:_offset,
-					getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
-					getId : function(id) { return id; },
-					setPosition:_setOffset,
-					elements:["d2_w5", "d2_w4", "d2_w1", "d2_w2", "d2_w3"]
-				});
-                jsPlumb.draggable($("#demo2 .w"));
-				$("#demo2").bind("click", function(e) { m2.executeAtCenter(); });
+    var m2 = new Magnetizer({
+        getPosition: _offset,
+        getSize: function (id) {
+            return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ];
+        },
+        getId: function (id) {
+            return id;
+        },
+        setPosition: _setOffset,
+        elements: ["d2_w5", "d2_w4", "d2_w1", "d2_w2", "d2_w3"]
+    });
+    jsPlumb.draggable($("#demo2 .w"));
+    $("#demo2").bind("click", function (e) {
+        m2.executeAtCenter();
+    });
 
 
 // ------------------------   demo 3. click to magnetize at fixed location -------------------	
 
-				var m3 = new Magnetizer({
-					getPosition:_offset,
-					getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
-					getId : function(id) { return id; },
-					setPosition:_setOffset,
-					elements:["d3_w5", "d3_w4", "d3_w1", "d3_w2", "d3_w3"]
-				});
-                jsPlumb.draggable($("#demo3 .w"));
-				$("#demo3").bind("click", function(e) { m3.execute([150,150]); });
+    var m3 = new Magnetizer({
+        getPosition: _offset,
+        getSize: function (id) {
+            return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ];
+        },
+        getId: function (id) {
+            return id;
+        },
+        setPosition: _setOffset,
+        elements: ["d3_w5", "d3_w4", "d3_w1", "d3_w2", "d3_w3"]
+    });
+    jsPlumb.draggable($("#demo3 .w"));
+    $("#demo3").bind("click", function (e) {
+        m3.execute([150, 150]);
+    });
 
 // ------------------------   demo 4. click to magnetize at event location with grid constrain -------------------	
 
-				var gridConstrain = function(gridX, gridY) {
-					return function(id, current, delta) {
-						return {
-							left:(gridX * Math.floor( (current[0] + delta.left) / gridX )) - current[0],
-							top:(gridY * Math.floor( (current[1] + delta.top) / gridY )) - current[1]
-						};
-					};
-				};
+    var gridConstrain = function (gridX, gridY) {
+        return function (id, current, delta) {
+            return {
+                left: (gridX * Math.floor((current[0] + delta.left) / gridX)) - current[0],
+                top: (gridY * Math.floor((current[1] + delta.top) / gridY)) - current[1]
+            };
+        };
+    };
 
-				var m4 = new Magnetizer({
-					container:$("#demo4"),
-					getPosition:_offset,
-					getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
-					getId : function(id) { return id; },
-					setPosition:_setOffset,
-					elements:["d4_w5", "d4_w4", "d4_w1", "d4_w2", "d4_w3"],
-					getContainerPosition:function(c) { return c.offset(); },
-					constrain:gridConstrain(20,20)
-				});
-                jsPlumb.draggable($("#demo4 .w"));
-				$("#demo4").bind("click", function(e) { m4.executeAtEvent(e); });		
+    var m4 = new Magnetizer({
+        container: $("#demo4"),
+        getPosition: _offset,
+        getSize: function (id) {
+            return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ];
+        },
+        getId: function (id) {
+            return id;
+        },
+        setPosition: _setOffset,
+        elements: ["d4_w5", "d4_w4", "d4_w1", "d4_w2", "d4_w3"],
+        getContainerPosition: function (c) {
+            return c.offset();
+        },
+        constrain: gridConstrain(20, 20)
+    });
+    jsPlumb.draggable($("#demo4 .w"));
+    $("#demo4").bind("click", function (e) {
+        m4.executeAtEvent(e);
+    });
 
 // ------------------------   demo 5. continuous magnetization -------------------	
 
-				var m5 = new Magnetizer({
-					container:$("#demo5"),
-					getPosition:_offset,
-					getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
-					getId : function(id) { return id; },
-					setPosition:_setOffset,
-					elements:["d5_w5", "d5_w4", "d5_w1", "d5_w2", "d5_w3"],
-					getContainerPosition:function(c) { return c.offset(); }
-				});
-                jsPlumb.draggable($("#demo5 .w"));
-				$("#demo5").bind("mousemove", function(e) { m5.executeAtEvent(e); });			
+    var m5 = new Magnetizer({
+        container: $("#demo5"),
+        getPosition: _offset,
+        getSize: function (id) {
+            return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ];
+        },
+        getId: function (id) {
+            return id;
+        },
+        setPosition: _setOffset,
+        elements: ["d5_w5", "d5_w4", "d5_w1", "d5_w2", "d5_w3"],
+        getContainerPosition: function (c) {
+            return c.offset();
+        }
+    });
+    jsPlumb.draggable($("#demo5 .w"));
+    $("#demo5").bind("mousemove", function (e) {
+        m5.executeAtEvent(e);
+    });
 
 // ------------------------   demo 6. continuous magnetization with grid -------------------	
 
-				var m6 = new Magnetizer({
-					container:$("#demo6"),
-					getPosition:_offset,
-					getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
-					getId : function(id) { return id; },
-					setPosition:_setOffset,
-					elements:["d6_w5", "d6_w4", "d6_w1", "d6_w2", "d6_w3"],
-					getContainerPosition:function(c) { return c.offset(); },
-					constrain:gridConstrain(20,20)
-				});
-                jsPlumb.draggable($("#demo6 .w"));
-				$("#demo6").bind("mousemove", function(e) { m6.executeAtEvent(e); });							
+    var m6 = new Magnetizer({
+        container: $("#demo6"),
+        getPosition: _offset,
+        getSize: function (id) {
+            return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ];
+        },
+        getId: function (id) {
+            return id;
+        },
+        setPosition: _setOffset,
+        elements: ["d6_w5", "d6_w4", "d6_w1", "d6_w2", "d6_w3"],
+        getContainerPosition: function (c) {
+            return c.offset();
+        },
+        constrain: gridConstrain(20, 20)
+    });
+    jsPlumb.draggable($("#demo6 .w"));
+    $("#demo6").bind("mousemove", function (e) {
+        m6.executeAtEvent(e);
+    });
 
 
 // ------------------------   demo 7. magnetize without moving element that was clicked on -------------------	
-				var _elsToFilter = {},
-					_filter = function(id) {
-						return _elsToFilter[id] == null;
-					};
+    var _elsToFilter = {},
+            _filter = function (id) {
+                return _elsToFilter[id] == null;
+            };
 
-				var m7 = new Magnetizer({
-					container:$("#demo7"),
-					getContainerPosition:function(c) { return c.offset(); },
-					getPosition:_offset,
-					getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
-					getId : function(id) { return id; },
-					setPosition:_setOffset,
-					elements:["d7_w5", "d7_w4", "d7_w1", "d7_w2", "d7_w3"],
-					filter:_filter
-				});
-                jsPlumb.draggable($("#demo7 .w"));
-				$("#demo7 div").bind("click", function(e) { 
-					_elsToFilter = {};
-					_elsToFilter[$(this).attr("id")] = true;
-					m7.executeAtEvent(e); 
-				});
+    var m7 = new Magnetizer({
+        container: $("#demo7"),
+        getContainerPosition: function (c) {
+            return c.offset();
+        },
+        getPosition: _offset,
+        getSize: function (id) {
+            return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ];
+        },
+        getId: function (id) {
+            return id;
+        },
+        setPosition: _setOffset,
+        elements: ["d7_w5", "d7_w4", "d7_w1", "d7_w2", "d7_w3"],
+        filter: _filter
+    });
+    jsPlumb.draggable($("#demo7 .w"));
+    $("#demo7 div").bind("click", function (e) {
+        _elsToFilter = {};
+        _elsToFilter[$(this).attr("id")] = true;
+        m7.executeAtEvent(e);
+    });
 
 // ------------------------   demo 8. magnetize while dragging, with jsplumb -------------------	
-				jsPlumb.ready(function() {
+    jsPlumb.ready(function () {
 
-					jsPlumb.importDefaults({
-						Connector:"StateMachine",
-						Anchor:"AutoDefault",
-						PaintStyle:{lineWidth:3, strokeStyle:"orange"},
-						Endpoint:["Dot", { radius:13 }],
-						EndpointStyle:{ fillStyle:"orange" }
-					});
+        jsPlumb.importDefaults({
+            Connector: "StateMachine",
+            Anchor: "AutoDefault",
+            PaintStyle: {lineWidth: 3, strokeStyle: "orange"},
+            Endpoint: ["Dot", { radius: 13 }],
+            EndpointStyle: { fillStyle: "orange" }
+        });
 
-					// just some plumbing for the purposes of the demo
-					jsPlumb.connect({source:"d8_w1", target:"d8_w5"});
-					jsPlumb.connect({source:"d8_w4", target:"d8_w2"});
-					jsPlumb.connect({source:"d8_w3", target:"d8_w2"});
-					jsPlumb.connect({source:"d8_w5", target:"d8_w3"});
+        // just some plumbing for the purposes of the demo
+        jsPlumb.connect({source: "d8_w1", target: "d8_w5"});
+        jsPlumb.connect({source: "d8_w4", target: "d8_w2"});
+        jsPlumb.connect({source: "d8_w3", target: "d8_w2"});
+        jsPlumb.connect({source: "d8_w5", target: "d8_w3"});
 
-					var elements = ["d8_w5", "d8_w4", "d8_w1", "d8_w2", "d8_w3"];
+        var elements = ["d8_w5", "d8_w4", "d8_w1", "d8_w2", "d8_w3"];
 
-					var _dragElement = null,
-						_dragFilter = function(id) {
-							return id != _dragElement;
-						};
+        var _dragElement = null,
+                _dragFilter = function (id) {
+                    return id != _dragElement;
+                };
 
-					var m8 = new Magnetizer({
-						container:$("#demo8"),
-						getContainerPosition:function(c) { return c.offset(); },
-						getPosition:_offset,
-						getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
-						getId : function(id) { return id; },
-						setPosition:_setOffset,
-						elements:elements,
-						filter:_dragFilter,
-						padding:[5,5]
-					});
+        var m8 = new Magnetizer({
+            container: $("#demo8"),
+            getContainerPosition: function (c) {
+                return c.offset();
+            },
+            getPosition: _offset,
+            getSize: function (id) {
+                return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ];
+            },
+            getId: function (id) {
+                return id;
+            },
+            setPosition: _setOffset,
+            elements: elements,
+            filter: _dragFilter,
+            padding: [5, 5]
+        });
 
-					// run it to start with
-					m8.executeAtCenter();
-					jsPlumb.repaintEverything();
+        // run it to start with
+        m8.executeAtCenter();
+        jsPlumb.repaintEverything();
 
-					jsPlumb.draggable(elements, {
-						start:function(p) {
-							_dragElement = p.el.getAttribute("id");
-						},
-						drag:function(p) {
-							m8.executeAtEvent(p.e);
-							// here it might be the case that farahey should fire individual move events, because with lots of nodes
-							// maybe repainting everything is wasteful.
-							jsPlumb.repaintEverything();
-						},
-						stop:function(p) {
-							_dragElement = null;
-						}
-					});
-					
-				})
+        jsPlumb.draggable(elements, {
+            start: function (p) {
+                _dragElement = p.el.getAttribute("id");
+            },
+            drag: function (p) {
+                m8.executeAtEvent(p.e);
+                // here it might be the case that farahey should fire individual move events, because with lots of nodes
+                // maybe repainting everything is wasteful.
+                jsPlumb.repaintEverything();
+            },
+            stop: function (p) {
+                _dragElement = null;
+            }
+        });
+
+    });
 
 // ------------------------   demo 9. click to magnetize at event location, elements are supplied as object hash instead of array -------------------
 
-                var m9 = new Magnetizer({
-                    container:$("#demo9"),
-                    getPosition:function(obj) {
-                        return _offset(obj.id);
-                    },
-                    getSize:function(obj) { return [ $("#" + obj.id).outerWidth(), $("#" + obj.id).outerHeight() ]; },
-                    getId : function(obj) { return obj.id; },
-                    setPosition:function(obj, o) {
-                        _setOffset(obj.id, o);
-                    },
-                    getContainerPosition:function(c) { return c.offset(); },
-                    //elements:[{id:"d9_w5"}, {id:"d9_w4"}, {id:"d9_w1"}, {id:"d9_w2"}, {id:"d9_w3"}]
-                    elements:{
-                        "1":{id:"d9_w5"},
-                        "2":{id:"d9_w4"},
-                        "3":{id:"d9_w1"},
-                        "4":{id:"d9_w2"},
-                        "5":{id:"d9_w3"}
-                    }
-                });
-                // all divs are draggable
-                jsPlumb.draggable($("#demo9 .w"));
-                $("#demo9").bind("click", function(e) { m9.executeAtEvent(e); });
+    var m9 = new Magnetizer({
+        container: $("#demo9"),
+        getPosition: function (obj) {
+            return _offset(obj.id);
+        },
+        getSize: function (obj) {
+            return [ $("#" + obj.id).outerWidth(), $("#" + obj.id).outerHeight() ];
+        },
+        getId: function (obj) {
+            return obj.id;
+        },
+        setPosition: function (obj, o) {
+            _setOffset(obj.id, o);
+        },
+        getContainerPosition: function (c) {
+            return c.offset();
+        },
+        //elements:[{id:"d9_w5"}, {id:"d9_w4"}, {id:"d9_w1"}, {id:"d9_w2"}, {id:"d9_w3"}]
+        elements: {
+            "1": {id: "d9_w5"},
+            "2": {id: "d9_w4"},
+            "3": {id: "d9_w1"},
+            "4": {id: "d9_w2"},
+            "5": {id: "d9_w3"}
+        }
+    });
+    // all divs are draggable
+    jsPlumb.draggable($("#demo9 .w"));
+    $("#demo9").bind("click", function (e) {
+        m9.executeAtEvent(e);
+    });
 
-			});	
+});
 
 
-		</script>
-			
-	</body>
+</script>
+
+</body>
 </html>
