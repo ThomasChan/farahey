@@ -3,11 +3,9 @@
     "use strict";
 
     var root = this;
-    var Farahey;
+    var Farahey = root.Farahey = {};
     if (typeof exports !== 'undefined') {
-        Farahey = exports;
-    } else {
-        Farahey = root.Farahey = {};
+        exports.Farahey = Farahey;
     }
 
     var findInsertionPoint = function(sortedArr, val, comparator) {
@@ -26,16 +24,10 @@
             }
             return low;
         },
-        geomSupport = typeof jsPlumbGeom !== "undefined" ? jsPlumbGeom : Biltong,
+        geomSupport = root.Biltong,
         insertSorted = function(array, value, comparator) {
             var ip = findInsertionPoint(array, value, comparator);
             array.splice(ip, 0, value);
-        },
-        distanceFromOriginComparator = function(r1, r2, origin) {
-            var d1 = geomSupport.lineLength(origin, [ r1.x + (r1.w / 2), r1.y + (r1.h / 2)]),
-                d2 = geomSupport.lineLength(origin, [ r2.x + (r2.w / 2), r2.y + (r2.h / 2)]);
-
-            return d1 < d2 ? -1 : d1 == d2 ? 0 : 1;
         },
         EntryComparator = function(origin, getSize) {
             var _origin = origin,
@@ -199,7 +191,7 @@
     /**
      * Applies repulsive magnetism to a set of elements relative to a given point, with a specified
      * amount of padding around the point.
-     * @class Magnetizer
+     * @class FaraheyInstance
      * @constructor
      * @param {Object} params Constructor parameters.
      * @param {Selector|Element} [params.container] Element that contains the elements to magnetize. Only required if you intend to use the `executeAtEvent` method.
@@ -215,7 +207,7 @@
      * @param {Function} [params.filter] Optional function that takes an element id and returns whether or not that element can be moved.
      * @param {Boolean} [params.orderByDistanceFromOrigin=false] Whether or not to sort elements first by distance from origin. Can have better results but takes more time.
      */
-    root.Magnetizer = function(params) {
+    var FaraheyInstance = function(params) {
         var getPosition = params.getPosition,
             getSize = params.getSize,
             getId = params.getId,
@@ -401,7 +393,6 @@
             filter = f;
         };
 
-
         /**
          * Reset the Farahey instance. Use this to avoid memory leaks.
          * @method reset
@@ -416,5 +407,27 @@
         if (executeNow) this.execute();
 
     };
+
+    /**
+     * Gets a new FaraheyInstance
+     * @method
+     * @param {Object} params Method parameters.
+     * @param {Selector|Element} [params.container] Element that contains the elements to magnetize. Only required if you intend to use the `executeAtEvent` method.
+     * @param {Function} [params.getContainerPosition] Function that returns the position of the container (as an object of the form `{left:.., top:..}`) when requested. Only required if you intend to use the `executeAtEvent` method.
+     * @param {Function} params.getPosition A function that takes an element and returns its position. It does not matter to which element this position is computed as long as you remain consistent with this method, `setPosition` and the `origin` property.
+     * @param {Function} params.setPosition A function that takes an element and position, and sets it. See note about offset parent above.
+     * @param {Function} params.getSize A function that takes an element and returns its size, in pixels.
+     * @param {Number[]} [params.padding] Optional padding for x and y directions. Defaults to 20 pixels in each direction.
+     * @param {Function} [params.constrain] Optional function that takes an id and a proposed amount of movement in each axis, and returns the allowed amount of movement in each axis. You can use this to constrain your elements to a grid, for instance, or a path, etc.
+     * @param {Number[]} [params.origin] The origin of magnetization, in pixels. Defaults to 0,0. You can also supply this to the `execute` call.
+     * @param {Selector|String[]|Element[]} params.elements List, or object hash, of elements on which to operate.
+     * @param {Boolean} [params.executeNow=false] Whether or not to execute the routine immediately.
+     * @param {Function} [params.filter] Optional function that takes an element id and returns whether or not that element can be moved.
+     * @param {Boolean} [params.orderByDistanceFromOrigin=false] Whether or not to sort elements first by distance from origin. Can have better results but takes more time.
+     */
+    Farahey.getInstance = function(params) {
+        return new FaraheyInstance(params);
+    };
+
 }).call(typeof window !== 'undefined' ? window : this);
 
