@@ -122,7 +122,7 @@
 
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
 <script src="lib/biltong-0.2.js"></script>
-<script src="src/farahey-0.7.js"></script>
+<script src="src/farahey-0.9.js"></script>
 
 <script src="demo-lib/dom.jsPlumb-1.7.3-min.js"></script>
 
@@ -155,7 +155,7 @@ $(function () {
 
 // ------------------------   demo 1. click to magnetize at event location -------------------
 
-    var m1 = new Magnetizer({
+    var m1 = Farahey.getInstance({
         container: $("#demo1"),
         getPosition: _offset,
         getSize: function (id) {
@@ -180,7 +180,7 @@ $(function () {
 // ------------------------   demo 2. click to magnetize at center of elements -------------------	
 
 
-    var m2 = new Magnetizer({
+    var m2 = Farahey.getInstance({
         getPosition: _offset,
         getSize: function (id) {
             return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ];
@@ -199,7 +199,7 @@ $(function () {
 
 // ------------------------   demo 3. click to magnetize at fixed location -------------------	
 
-    var m3 = new Magnetizer({
+    var m3 = Farahey.getInstance({
         getPosition: _offset,
         getSize: function (id) {
             return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ];
@@ -226,7 +226,7 @@ $(function () {
         };
     };
 
-    var m4 = new Magnetizer({
+    var m4 = Farahey.getInstance({
         container: $("#demo4"),
         getPosition: _offset,
         getSize: function (id) {
@@ -249,7 +249,7 @@ $(function () {
 
 // ------------------------   demo 5. continuous magnetization -------------------	
 
-    var m5 = new Magnetizer({
+    var m5 = Farahey.getInstance({
         container: $("#demo5"),
         getPosition: _offset,
         getSize: function (id) {
@@ -271,7 +271,7 @@ $(function () {
 
 // ------------------------   demo 6. continuous magnetization with grid -------------------	
 
-    var m6 = new Magnetizer({
+    var m6 = Farahey.getInstance({
         container: $("#demo6"),
         getPosition: _offset,
         getSize: function (id) {
@@ -299,7 +299,7 @@ $(function () {
                 return _elsToFilter[id] == null;
             };
 
-    var m7 = new Magnetizer({
+    var m7 = Farahey.getInstance({
         container: $("#demo7"),
         getContainerPosition: function (c) {
             return c.offset();
@@ -346,7 +346,7 @@ $(function () {
                     return id != _dragElement;
                 };
 
-        var m8 = new Magnetizer({
+        var m8 = Farahey.getInstance({
             container: $("#demo8"),
             getContainerPosition: function (c) {
                 return c.offset();
@@ -387,7 +387,7 @@ $(function () {
 
 // ------------------------   demo 9. click to magnetize at event location, elements are supplied as object hash instead of array -------------------
 
-    var m9 = new Magnetizer({
+    var m9 = Farahey.getInstance({
         container: $("#demo9"),
         getPosition: function (obj) {
             return _offset(obj.id);
