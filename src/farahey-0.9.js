@@ -345,7 +345,17 @@
          * @param el {Object} Element to add.
          */
         this.addElement = function(el) {
-            elements.push(el);
+            if (el != null && elements.indexOf(el) === -1) {
+                elements.push(el);
+            }
+        };
+
+        /**
+         * Gets the list of elements currently being managed.
+         * @method getElements
+         */
+        this.getElements = function() {
+            return elements;
         };
 
         /**
