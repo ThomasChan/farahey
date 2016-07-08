@@ -337,17 +337,40 @@
          */
         this.setElements = function(_els) {
             elements = _convertElements(_els);
+            return this;
         };
 
         /**
          * Adds the given element to the set of elements on which to operate.
          * @method addElement
          * @param el {Object} Element to add.
+         * @param {Boolean} [doNotTestForDuplicates=false] If true, we skip the check for duplicates. This makes
+         * for a much faster call when there are lots of elements, just use it with care.
          */
-        this.addElement = function(el) {
-            if (el != null && elements.indexOf(el) === -1) {
+        this.addElement = function(el, doNotTestForDuplicates) {
+            if (el != null && (doNotTestForDuplicates || elements.indexOf(el) === -1)) {
                 elements.push(el);
             }
+            return this;
+        };
+
+        /**
+         * Adds the given elements to the set of elements on which to operate.
+         * @method addElements
+         * @param els {Object[]} Elements to add.
+         * @param {Boolean} [doNotTestForDuplicates=false] If true, we skip the check for duplicates. This makes
+         * for a much faster call when there are lots of elements, just use it with care.
+         */
+        this.addElements = function(els, doNotTestForDuplicates) {
+            if (doNotTestForDuplicates) {
+                Array.prototype.push.apply(elements, els);
+            }
+            else {
+                for (var i = 0; i < els.length; i++) {
+                    this.addElement(els[i]);
+                }
+            }
+            return this;
         };
 
         /**
@@ -371,6 +394,7 @@
                 }
             }
             if (idx != -1) elements.splice(idx, 1);
+            return this;
         };
 
         /**
@@ -415,6 +439,7 @@
             createOriginDebugger();
 
         if (executeNow) this.execute();
+        return this;
 
     };
 

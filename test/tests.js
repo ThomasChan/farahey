@@ -44,4 +44,15 @@ var testSuite = function (renderMode) {
         equal(farahey.getElements().length, 1, "still one element registered after attempt at adding a duplicate");
     });
 
+    test("add elements", function() {
+        farahey.addElement("one");
+        equal(farahey.getElements().length, 1, "one element registered");
+
+        farahey.addElements(["one", "two"]);
+        equal(farahey.getElements().length, 2, "two elements registered after addElements, one of which was a duplicate");
+
+        farahey.addElements(["one", "two", "three"], true);
+        equal(farahey.getElements().length, 5, "five elements registered after addElements again, two of which were duplicates, but we set the flag saying to ignore the check (because its quicker)");
+    });
+
 };
