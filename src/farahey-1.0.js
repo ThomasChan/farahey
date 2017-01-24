@@ -188,21 +188,6 @@
         return o;
     };
 
-    var _convertGroups = function(groups) {
-        if (groups != null && Array.isArray(groups)) {
-            var out = [];
-            for (var i = 0; i < groups.length; i++) {
-                out.push({
-                    members:groups[i],
-                    extents:{left:Infinity, right:-Infinity, top:-Infinity, bottom:Infinity}
-                });
-            }
-            return out;
-        } else {
-            return null;
-        }
-    };
-
     /**
      * Applies repulsive magnetism to a set of elements relative to a given point, with a specified
      * amount of padding around the point.
@@ -234,7 +219,6 @@
             positions = {},
             sizes = {},
             elements = _convertElements(params.elements || []),
-            groups = _convertGroups(params.groups),
             origin = params.origin || [0,0],
             executeNow = params.executeNow,
             //minx, miny, maxx, maxy,
@@ -286,31 +270,10 @@
             _updatePositions = function() {
                 comparator.setOrigin(origin);
                 positionArray = []; positions = {}; sizes = {};
-
-                if (groups != null && groups.length > 0) {
-                    var mix, max, miy, may;
-                    mix = miy = Infinity;
-                    max = may = -Infinity;
-                    for (var i = 0; i < groups.length; i++) {
-                        groups[i].extents = _computeExtents(groups[i].members);
-                        max = Math.min(mix, groups[i].extents[0]);
-                        max = Math.max(max, groups[i].extents[1]);
-                        miy = Math.min(miy, groups[i].extents[2]);
-                        may = Math.max(may, groups[i].extents[3]);
-                    }
-
-                    return [ mix, max, miy, may ];
-                }
-                else {
-                    var extents = _computeExtents(elements);
-
-                    return extents;
-                }
-
-
+                return _computeExtents(elements);
             },
             _run = function() {
-                if ((groups != null && groups.length > 1) || elements.length > 1) {
+                if (elements.length > 1) {
                     var _movedElements = _magnetize(positionArray, positions, sizes, padding, constrain, origin, filter, updateOnStep, stepInterval, _positionElements);
                     _positionElements(_movedElements);
                 }
