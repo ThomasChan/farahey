@@ -56,3 +56,15 @@ body {
 	border:1px solid blue;
 	position: absolute;
 }
+
+.g1 {
+    border:20px solid crimson;
+}
+
+.g2 {
+    border:20px solid #8dd3dc;
+}
+
+.g3 {
+    border:20px solid #bcdcc4;
+}

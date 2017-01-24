@@ -1,47 +1,44 @@
 ### Farahey
 
-This is a small utility that provides a means for "magnetizing" a set of elements such that no element overlaps another, and any two elements are at least some minimum distance apart.
+This is a small utility that provides a means for "magnetizing" a set of elements such that no element overlaps another, 
+and any two elements are at least some minimum distance apart.
 
-Currently, all elements are assumed to have the same "charge", which is to say that every element repels every other element.  It is possible that a future version of this utility could allow for elements to possess different charges.
+Currently, all elements are assumed to have the same "charge", which is to say that every element repels every other element.  
+It is possible that a future version of this utility could allow for elements to possess different charges.
 
 ***** This project used to be called **jsMagnetize**.
 
-#### Demonstration
-
-You can see a demonstration [here](http://morrisonpitt.com/farahey).
 
 #### Dependencies
 
-Farahey has a dependency on [Biltong](https://github.com/sporritt/biltong). If you have [jsPlumb](https://github.com/sporritt/jsPlumb) in your page then Biltong is already available to you.
+Farahey has a dependency on [Biltong](https://github.com/jsPlumb/biltong). If you have [jsPlumb](https://github.com/jsPlumb/jsPlumb) in 
+your page then Biltong is already available to you.
 
 #### Magnetizing
 
 In order to magnetize a set of elements, you need to provide several pieces of information:
 
 - a list of elements. This can be any "list-like" object, meaning it exposes a `length` property.
-- a function that can return the current offset for some element in the list. It doesn't matter what datatype this function takes as argument, as long as it matches the objects in the element list.
+- a function that can return the current offset for some element in the list. It doesn't matter what datatype this 
+function takes as argument, as long as it matches the objects in the element list.
 - a function that can take some element in the list and a location for it, and apply that location to the element.
 - a function that can take some element in the list and return its id.
 - a function that can take some element in the list and return its size as a `[width,height]` array.
 
 Should you wish to make use of the `executeAtEvent` method you will also need to provide:
 
-- a container element. This is the element whose origin is being used calculate/set offsets. Ordinarily this will most likely be the parent of the elements you are magnetizing.
-- a function that can return the page offset of the container element. This is used to map the event's page location into the coordinate system used by your get/set functions.
+- a container element. This is the element whose origin is being used calculate/set offsets. Ordinarily this will most 
+likely be the parent of the elements you are magnetizing.
+- a function that can return the page offset of the container element. This is used to map the event's page location 
+into the coordinate system used by your get/set functions.
 
-At this point you might be thinking this sounds kind of low-level - why didn't I just do all the offset-y type stuff using jQuery or something?  jQuery's in the demo page, right? So, I agree: it is indeed low level. I need it to be this way so that I can reuse it across several libraries. But I am considering the possibility of releasing library-specific wrappers around the magnetizer in the future.  One possibility in jQuery land could be something like:
-
-    $("#myElement").magnetize({
-    	elements:$(".aChildOfMine"),
-    	continuous:true,
-    	padding:[10,10]
-    });
-
-...meaning magnetize all the child elements having class `aChildOfMine` in `#myElement` continuously as the user moves the mouse around. You can of course do this right now but it takes a bit more typing.
+At this point you might be thinking this sounds kind of low-level - why didn't I just do all the offset-y type stuff using 
+jQuery or something?  It is indeed low level. We need it to be this way so that we can reuse it across several libraries.
 
 ##### Origin
 
-Magnetization takes place with respect to an origin, which is an [x,y] value in your coordinate space. There are a few methods exposed on the magnetizer, each of which uses a different origin.
+Magnetization takes place with respect to an origin, which is an [x,y] value in your coordinate space. There are a few 
+methods exposed on the magnetizer, each of which uses a different origin.
 
 ##### `execute([x,y])` 
 
@@ -60,9 +57,11 @@ This method takes some event and maps its location to your coordinate space, usi
 You can provide a `filter` function which, when passed the id of some element, should return true if the
 element may move, or false if it may not:
   
-	filter:function(id) {
-		return myElementMap[id] == null;
-	}
+```javascript  
+filter:function(id) {
+    return myElementMap[id] == null;
+}
+```
 
 This shows a simple implementation in which elements that may not move are stored via their ids in a hash.
 
@@ -70,27 +69,33 @@ This shows a simple implementation in which elements that may not move are store
 
 You can provide a `constrain` function to control the movement of your elements.  The method signature is:
 
-    constrain:function(id, current, delta)
+```javascript
+constrain:function(id, current, delta)
+```
 
  Your function is provided with a `delta` array for proposed shift in each axis, and is expected to return an array of allowed shift in each axis.  Here's an example of implementing a function that constrains movement to a grid:
 
-    var gridConstrain20x20 = function(id, current, delta) {
-		return {
-			left:(20 * Math.floor( (current[0] + delta.left) / 20 )) - current[0],
-			top:(20 * Math.floor( (current[1] + delta.top) / 20 )) - current[1]
-		}; 		
+```javascript
+var gridConstrain20x20 = function(id, current, delta) {
+    return {
+        left:(20 * Math.floor( (current[0] + delta.left) / 20 )) - current[0],
+        top:(20 * Math.floor( (current[1] + delta.top) / 20 )) - current[1]
     };
+};
+```
 
 The demo page uses a curried version of this to allow you to set an arbitrary grid size:
 
-    var gridConstrain = function(gridX, gridY) {
-	    return function(id, current, delta) {
-		    return {
-			    left:(gridX * Math.floor( (current[0] + delta.left) / gridX )) - current[0],
-			    top:(gridY * Math.floor( (current[1] + delta.top) / gridY )) - current[1]
-		    };
-	    };
+```javascript
+var gridConstrain = function(gridX, gridY) {
+    return function(id, current, delta) {
+        return {
+            left:(gridX * Math.floor( (current[0] + delta.left) / gridX )) - current[0],
+            top:(gridY * Math.floor( (current[1] + delta.top) / gridY )) - current[1]
+        };
     };
+};
+```
 
 
 #### Constructor Parameters
@@ -109,34 +114,40 @@ This is the full list of constructor parameters:
 
 #### Extras
 
-A couple of internal methods are exposed for external use (because for the context in which I'm using this I need these methods and it seemed a shame to duplicate them):
+A couple of internal methods are exposed for external use:
 
 - Farahey.paddedRectangle = function(o, s, p) { ... }
 
-Takes three arrays - `o` is the element's offset, `s` is its size, and `p` is the desired padding in each axis, and returns a rectangle that pads the element with the desired padding values.
+Takes three arrays - `o` is the element's offset, `s` is its size, and `p` is the desired padding in each axis, and 
+returns a rectangle that pads the element with the desired padding values.
 
 - Farahey.calculateSpacingAdjustment = function(r1, r2, angle) { ... }
 
-Takes two rectangles in the form `{ x:..., y:..., w:..., h:... }` and calculates how far to move r2 such that the two rectangles do not overlap.  `angle` denotes the angle of travel for r2, and if not supplied is calculated by drawing a line between the centers of the two rectangles.
+Takes two rectangles in the form `{ x:..., y:..., w:..., h:... }` and calculates how far to move r2 such that the two 
+rectangles do not overlap.  `angle` denotes the angle of travel for r2, and if not supplied is calculated by drawing a 
+line between the centers of the two rectangles.
 
 #### Examples
 
-This is the source from the various examples on the [demo page](http://morrisonpitt.com/farahey).
+This is the source from the various examples on the [demo page](index.html).
 
 ##### 1. click to magnetize at event location
 
-Here the magnetizer's origin is set to be the location of the click event. `_offset` and `_setOffset` are functions the demo page uses to get/set absolute positions on the style of some element.
+Here the magnetizer's origin is set to be the location of the click event. `_offset` and `_setOffset` are functions the 
+demo page uses to get/set absolute positions on the style of some element.
 
-	var m1 = new Magnetizer({
-		container:$("#demo1"),
-		getPosition:_offset,
-		getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
-		getId : function(id) { return id; },
-		setPosition:_setOffset,
-		getContainerPosition:function(c) { return c.offset(); },
-		elements:["d1\_w5", "d1\_w4", "d1\_w1", "d1\_w2", "d1\_w3"]
-	});
-	$("#demo1").bind("click", function(e) { m1.executeAtEvent(e); });
+```javascript
+var m1 = new Magnetizer({
+    container:$("#demo1"),
+    getPosition:_offset,
+    getSize:function(id) { return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ]; },
+    getId : function(id) { return id; },
+    setPosition:_setOffset,
+    getContainerPosition:function(c) { return c.offset(); },
+    elements:["d1\_w5", "d1\_w4", "d1\_w1", "d1\_w2", "d1\_w3"]
+});
+$("#demo1").bind("click", function(e) { m1.executeAtEvent(e); });
+```
 
 ##### 2. click to magnetize at center of elements
 

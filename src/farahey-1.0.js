@@ -188,6 +188,21 @@
         return o;
     };
 
+    var _convertGroups = function(groups) {
+        if (groups != null && Array.isArray(groups)) {
+            var out = [];
+            for (var i = 0; i < groups.length; i++) {
+                out.push({
+                    members:groups[i],
+                    extents:{left:Infinity, right:-Infinity, top:-Infinity, bottom:Infinity}
+                });
+            }
+            return out;
+        } else {
+            return null;
+        }
+    };
+
     /**
      * Applies repulsive magnetism to a set of elements relative to a given point, with a specified
      * amount of padding around the point.
@@ -219,9 +234,10 @@
             positions = {},
             sizes = {},
             elements = _convertElements(params.elements || []),
+            groups = _convertGroups(params.groups),
             origin = params.origin || [0,0],
             executeNow = params.executeNow,
-            minx, miny, maxx, maxy,
+            //minx, miny, maxx, maxy,
             getOrigin = this.getOrigin = function() { return origin; },
             filter = params.filter || function(_) { return true; },
             orderByDistanceFromOrigin = params.orderByDistanceFromOrigin,
@@ -246,27 +262,55 @@
                     insertSorted(positionArray, p, comparator.compare);
                 }
             },
-            _updatePositions = function() {
-                comparator.setOrigin(origin);
-                positionArray = []; positions = {}; sizes = {};
+            _computeExtents = function(els) {
+                var minx, miny, maxx, maxy;
                 minx = miny = Infinity;
                 maxx = maxy = -Infinity;
-                for (var i = 0; i < elements.length; i++) {
-                    var p = getPosition(elements[i]),
-                        s = getSize(elements[i]),
-                        id = getId(elements[i]);
+                for (var i = 0; i < els.length; i++) {
+                    var p = getPosition(els[i]),
+                        s = getSize(els[i]),
+                        id = getId(els[i]);
 
                     positions[id] = [p.left, p.top];
-                    _addToPositionArray([ [p.left, p.top], id, elements[i]]);
+                    _addToPositionArray([ [p.left, p.top], id, els[i]]);
                     sizes[id] = s;
                     minx = Math.min(minx, p.left);
                     miny = Math.min(miny, p.top);
                     maxx = Math.max(maxx, p.left + s[0]);
                     maxy = Math.max(maxy, p.top + s[1]);
                 }
+
+                return [ minx, maxx, miny, maxy ];
+
+            },
+            _updatePositions = function() {
+                comparator.setOrigin(origin);
+                positionArray = []; positions = {}; sizes = {};
+
+                if (groups != null && groups.length > 0) {
+                    var mix, max, miy, may;
+                    mix = miy = Infinity;
+                    max = may = -Infinity;
+                    for (var i = 0; i < groups.length; i++) {
+                        groups[i].extents = _computeExtents(groups[i].members);
+                        max = Math.min(mix, groups[i].extents[0]);
+                        max = Math.max(max, groups[i].extents[1]);
+                        miy = Math.min(miy, groups[i].extents[2]);
+                        may = Math.max(may, groups[i].extents[3]);
+                    }
+
+                    return [ mix, max, miy, may ];
+                }
+                else {
+                    var extents = _computeExtents(elements);
+
+                    return extents;
+                }
+
+
             },
             _run = function() {
-                if (elements.length > 1) {
+                if ((groups != null && groups.length > 1) || elements.length > 1) {
                     var _movedElements = _magnetize(positionArray, positions, sizes, padding, constrain, origin, filter, updateOnStep, stepInterval, _positionElements);
                     _positionElements(_movedElements);
                 }
@@ -301,10 +345,10 @@
          * @method executeAtCenter
          */
         this.executeAtCenter = function() {
-            _updatePositions();
+            var extents = _updatePositions();
             setOrigin([
-                    (minx + maxx) / 2,
-                    (miny + maxy) / 2
+                (extents[0] + extents[1]) / 2,
+                (extents[2] + extents[3]) / 2
             ]);
             _run();
         };
