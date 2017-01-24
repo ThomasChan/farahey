@@ -436,23 +436,73 @@ $(function () {
 
 // --------------------- demo 10. magnetize groups of elements.
 
+    function groupExtents(members) {
+        var minx = Infinity, maxx = -Infinity, miny = Infinity, maxy = -Infinity,
+                positions = {}, offsets = {};
+
+        for (var i = 0; i < members.length; i++) {
+            var o = _offset(members[i]),
+                s = [ $("#" + members[i]).outerWidth(), $("#" + members[i]).outerHeight() ];
+
+            positions[members[i]] = o;
+
+            minx = Math.min(minx, o.left);
+            maxx = Math.max(maxx, o.left + s[0]);
+            miny = Math.min(miny, o.top);
+            maxy = Math.max(maxy, o.top + s[1]);
+        }
+
+        for (i = 0; i < members.length; i++) {
+            offsets[members[i]] = {
+                left:positions[members[i]].left - minx,
+                top:positions[members[i]].top - miny
+            }
+        }
+
+        return {extents:[ minx, maxx, miny, maxy ], offsets:offsets};
+    }
+
+    function group(id, members) {
+        var info = groupExtents(members);
+
+        return {
+            id:id,
+            members:members,
+            extents:info.extents,
+            offsets:info.offsets
+        };
+    }
 
     var m10 = Farahey.getInstance({
         container:$("#demo10"),
-        groups:[
-            [ "d10_w1", "d10_w2" ],
-            [ "d10_w3", "d10_w4" ],
-            [ "d10_w5", "d10_w6" ]
+        elements:[
+            group("1", [ "d10_w1", "d10_w2" ] ),
+            group("2", [ "d10_w3", "d10_w4" ] ),
+            group("3", [ "d10_w5", "d10_w6" ] )
         ],
-        getPosition: _offset,
-        setPosition: _setOffset,
-        getSize: function (id) {
-            return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ];
+        getPosition: function(el) {
+            console.log("the position of a group is the top left corner of its extents")
+            return {left:el.extents[0], top:el.extents[2] };
         },
-        getId: function (id) {
-            return id;
+        setPosition: function(obj, o) {
+            console.log("setting the position of a group means setting the position of each element by its offset to the top left corner")
+            for(var i = 0; i < obj.members.length; i++) {
+                var offs = obj.offsets[obj.members[i]];
+                _setOffset(obj.members[i], {
+                    left: o.left + offs.left,
+                    top: o.top + offs.top
+                });
+            }
         },
-        elements:["d10_w1", "d10_w2", "d10_w3", "d10_w4", "d10_w5", "d10_w6"]
+        getSize: function (el) {
+            //return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ];
+            console.log("the size of a group is the bounding box of its elements")
+            return [ el.extents[1] - el.extents[0], el.extents[3] - el.extents[2] ];
+
+        },
+        getId: function (obj) {
+            return obj.id;
+        }
     });
     $("#demo10").bind("click", function (e) {
         m10.executeAtCenter();
