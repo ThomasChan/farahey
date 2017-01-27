@@ -1,0 +1,31 @@
+{
+  "name": "farahey",
+  "version": "1.0.0",
+  "description": "This is a small utility that provides a means for \"magnetizing\" a set of elements such that no element overlaps another,  and any two elements are at least some minimum distance apart.",
+  "main": "src/farahey.js",
+  "files": [
+    "src/farahey.js"
+  ],
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsplumb/farahey.git"
+  },
+  "author": "jsPlumb <hello@jsplumbtoolkit.com> (https://jsplumbtoolkit.com)",
+  "license": "(MIT OR GPL-2.0)",
+  "bugs": {
+    "url": "https://github.com/jsplumb/farahey/issues"
+  },
+  "homepage": "https://github.com/jsplumb/farahey#readme",
+  "dependencies": {
+    "biltong": "^0.4.0"
+  },
+  "devDependencies": {
+    "jsplumb": "^2.2.10"
+  }
+}

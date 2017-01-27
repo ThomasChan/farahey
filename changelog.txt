@@ -1,0 +1,8 @@
+1.0.0
+
+January 27 2017
+
+- npm publish v1.0.0
+- import Biltong via npm
+- import jsPlumb via npm
+- alter paint style keys to jsplumb 2.2.x key names
