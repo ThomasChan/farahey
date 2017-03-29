@@ -326,8 +326,8 @@
         this.executeAtEvent = function(e) {
             var c = params.container,
                 o = params.getContainerPosition(c),
-                x = e.pageX - o.left + c[0].scrollLeft,
-                y = e.pageY - o.top + c[0].scrollTop;
+                x = e.pageX - o.left + c.scrollLeft,
+                y = e.pageY - o.top + c.scrollTop;
 
             if (debug) {
                 originDebugMarker.style.left = e.pageX + "px";
