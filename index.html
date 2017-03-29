@@ -169,7 +169,7 @@ $(function () {
 // ------------------------   demo 1. click to magnetize at event location -------------------
 
     var m1 = Farahey.getInstance({
-        container: $("#demo1"),
+        container: demo1,
         getPosition: _offset,
         getSize: function (id) {
             return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ];
@@ -179,7 +179,7 @@ $(function () {
         },
         setPosition: _setOffset,
         getContainerPosition: function (c) {
-            return c.offset();
+            return $(c).offset();
         },
         elements: ["d1_w5", "d1_w4", "d1_w1", "d1_w2", "d1_w3"]
     });
@@ -240,7 +240,7 @@ $(function () {
     };
 
     var m4 = Farahey.getInstance({
-        container: $("#demo4"),
+        container: demo4,
         getPosition: _offset,
         getSize: function (id) {
             return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ];
@@ -251,7 +251,7 @@ $(function () {
         setPosition: _setOffset,
         elements: ["d4_w5", "d4_w4", "d4_w1", "d4_w2", "d4_w3"],
         getContainerPosition: function (c) {
-            return c.offset();
+            return $(c).offset();
         },
         constrain: gridConstrain(20, 20)
     });
@@ -263,7 +263,7 @@ $(function () {
 // ------------------------   demo 5. continuous magnetization -------------------	
 
     var m5 = Farahey.getInstance({
-        container: $("#demo5"),
+        container: demo5,
         getPosition: _offset,
         getSize: function (id) {
             return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ];
@@ -274,7 +274,7 @@ $(function () {
         setPosition: _setOffset,
         elements: ["d5_w5", "d5_w4", "d5_w1", "d5_w2", "d5_w3"],
         getContainerPosition: function (c) {
-            return c.offset();
+            return $(c).offset();
         }
     });
     jsPlumb.draggable($("#demo5 .w"));
@@ -285,7 +285,7 @@ $(function () {
 // ------------------------   demo 6. continuous magnetization with grid -------------------	
 
     var m6 = Farahey.getInstance({
-        container: $("#demo6"),
+        container: demo6,
         getPosition: _offset,
         getSize: function (id) {
             return [ $("#" + id).outerWidth(), $("#" + id).outerHeight() ];
@@ -296,7 +296,7 @@ $(function () {
         setPosition: _setOffset,
         elements: ["d6_w5", "d6_w4", "d6_w1", "d6_w2", "d6_w3"],
         getContainerPosition: function (c) {
-            return c.offset();
+            return $(c).offset();
         },
         constrain: gridConstrain(20, 20)
     });
@@ -313,9 +313,9 @@ $(function () {
             };
 
     var m7 = Farahey.getInstance({
-        container: $("#demo7"),
+        container: demo7,
         getContainerPosition: function (c) {
-            return c.offset();
+            return $(c).offset();
         },
         getPosition: _offset,
         getSize: function (id) {
@@ -360,9 +360,9 @@ $(function () {
                 };
 
         var m8 = Farahey.getInstance({
-            container: $("#demo8"),
+            container: demo8,
             getContainerPosition: function (c) {
-                return c.offset();
+                return $(c).offset();
             },
             getPosition: _offset,
             getSize: function (id) {
@@ -401,7 +401,7 @@ $(function () {
 // ------------------------   demo 9. click to magnetize at event location, elements are supplied as object hash instead of array -------------------
 
     var m9 = Farahey.getInstance({
-        container: $("#demo9"),
+        container: demo9,
         getPosition: function (obj) {
             return _offset(obj.id);
         },
@@ -415,7 +415,7 @@ $(function () {
             _setOffset(obj.id, o);
         },
         getContainerPosition: function (c) {
-            return c.offset();
+            return $(c).offset();
         },
         //elements:[{id:"d9_w5"}, {id:"d9_w4"}, {id:"d9_w1"}, {id:"d9_w2"}, {id:"d9_w3"}]
         elements: {
@@ -472,7 +472,7 @@ $(function () {
     }
 
     var m10 = Farahey.getInstance({
-        container:$("#demo10"),
+        container:demo10,
         elements:[
             group("1", [ "d10_w1", "d10_w2" ] ),
             group("2", [ "d10_w3", "d10_w4" ] ),
