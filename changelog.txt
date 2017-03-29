@@ -1,3 +1,10 @@
+1.0.1
+
+March 30 2017
+
+- update executeAtEvent method to expect a plain DOM element, not a jQuery selector
+- update test page to use only plain DOM elements as Containers, not jQuery selectors.
+
 1.0.0
 
 January 27 2017
