@@ -1,6 +1,6 @@
 {
   "name": "farahey",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "This is a small utility that provides a means for \"magnetizing\" a set of elements such that no element overlaps another,  and any two elements are at least some minimum distance apart.",
   "main": "src/farahey.js",
   "files": [

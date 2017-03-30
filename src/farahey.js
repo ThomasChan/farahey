@@ -221,7 +221,7 @@
             elements = _convertElements(params.elements || []),
             origin = params.origin || [0,0],
             executeNow = params.executeNow,
-            //minx, miny, maxx, maxy,
+        //minx, miny, maxx, maxy,
             getOrigin = this.getOrigin = function() { return origin; },
             filter = params.filter || function(_) { return true; },
             orderByDistanceFromOrigin = params.orderByDistanceFromOrigin,
@@ -272,9 +272,11 @@
                 positionArray = []; positions = {}; sizes = {};
                 return _computeExtents(elements);
             },
-            _run = function() {
+            _run = function(options) {
                 if (elements.length > 1) {
-                    var _movedElements = _magnetize(positionArray, positions, sizes, padding, constrain, origin, filter, updateOnStep, stepInterval, _positionElements);
+                    var f = options && options.filter ? options.filter : filter;
+                    var p = options && options.padding ? options.padding : padding;
+                    var _movedElements = _magnetize(positionArray, positions, sizes, p, constrain, origin, f, updateOnStep, stepInterval, _positionElements);
                     _positionElements(_movedElements);
                 }
             },
@@ -296,24 +298,26 @@
          * Runs the magnetize routine.
          * @method execute
          * @param {Number[]} [o] Optional origin to use. You may have set this in the constructor and do not wish to supply it, or you may be happy with the default of [0,0].
+         * @param {Function} [options] Options to override defaults. Currently only `filter` is supported.
          */
-        this.execute = function(o) {
+        this.execute = function(o, options) {
             setOrigin(o);
             _updatePositions();
-            _run();
+            _run(options);
         };
 
         /**
          * Computes the center of all the nodes and then uses that as the magnetization origin when it runs the routine.
          * @method executeAtCenter
+         * @param {Function} [options] Options to override defaults. Currently only `filter` is supported.
          */
-        this.executeAtCenter = function() {
+        this.executeAtCenter = function(options) {
             var extents = _updatePositions();
             setOrigin([
-                (extents[0] + extents[1]) / 2,
-                (extents[2] + extents[3]) / 2
+                    (extents[0] + extents[1]) / 2,
+                    (extents[2] + extents[3]) / 2
             ]);
-            _run();
+            _run(options);
         };
 
         /**
@@ -322,8 +326,9 @@
          * constructor.
          * @method executeAtEvent
          * @param {Event} e Event to get origin location from.
+         * @param {Function} [options] Options to override defaults. Currently only `filter` is supported.
          */
-        this.executeAtEvent = function(e) {
+        this.executeAtEvent = function(e, options) {
             var c = params.container,
                 o = params.getContainerPosition(c),
                 x = e.pageX - o.left + c.scrollLeft,
@@ -334,7 +339,7 @@
                 originDebugMarker.style.top = e.pageY + "px";
             }
 
-            this.execute([x,y]);
+            this.execute([x,y], options);
         };
 
         /**
