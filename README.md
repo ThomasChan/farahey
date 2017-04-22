@@ -54,11 +54,11 @@ This method takes some event and maps its location to your coordinate space, usi
 
 #### Filtering Elements
 
-You can provide a `filter` function which, when passed some element, should return true if the
+You can provide a `filter` function which, when passed some element and its derived id, should return true if the
 element may move, or false if it may not:
   
 ```javascript  
-filter:function(id) {
+filter:function(id, el) {
     return myElementMap[id] == null;
 }
 ```
@@ -67,11 +67,11 @@ This shows a simple implementation in which elements that may not move are store
 
 #### Excluding Elements
 
-You can provide an `exclude` function which, when passed some element, should return true if the given element should be excluded
+You can provide an `exclude` function which, when passed some element and its derived id, should return true if the given element should be excluded
 from the computation. This means it neither moves nor causes any other elements to move.
 
 ```javascript
-exclude:function(id) {
+exclude:function(id, el) {
     return id === "excludeMe";
 }
 ```

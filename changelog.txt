@@ -1,3 +1,9 @@
+1.1.1
+
+April 23rd 2017
+
+- pass original element as well its derived id into the `filter` and `exclude` functions.
+
 1.1.0
 
 April 23rd 2017

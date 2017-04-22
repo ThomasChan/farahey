@@ -119,7 +119,7 @@
                 step = function() {
                     for (var i = 0; i < positionArray.length; i++) {
 
-                        if (exclude(positionArray[i][1])) {
+                        if (exclude(positionArray[i][1], positionArray[i][2])) {
                             continue;
                         }
 
@@ -131,7 +131,7 @@
                         //side
                             r1 = _paddedRectangle(o1, s1, padding);
 
-                        if (filter(positionArray[i][1]) && geomSupport.intersects(focus, r1)) {
+                        if (filter(positionArray[i][1], positionArray[i][2]) && geomSupport.intersects(focus, r1)) {
                             adjustBy = _calculateSpacingAdjustment(focus, r1);
                             constrainedAdjustment = constrain(positionArray[i][1], o1, adjustBy);
                             _move(oid, o1, constrainedAdjustment.left, constrainedAdjustment.top);
@@ -143,11 +143,11 @@
                         for (var j = 0; j < positionArray.length; j++) {
                             if (i != j) {
 
-                                if (exclude(positionArray[j][1])) {
+                                if (exclude(positionArray[j][1], positionArray[j][2])) {
                                     continue;
                                 }
 
-                                if (filter(positionArray[j][1])) {
+                                if (filter(positionArray[j][1], positionArray[j][2])) {
                                     var o2 = positions[positionArray[j][1]],
                                         s2 = sizes[positionArray[j][1]],
                                     // create a rectangle for the second element, again by putting padding of the desired
