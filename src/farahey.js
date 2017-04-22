@@ -102,7 +102,8 @@
         },
         _magnetize = function(positionArray, positions, sizes, padding,
                               constrain, origin, filter,
-                              updateOnStep, stepInterval, stepCallback, iterations, exclude)
+                              updateOnStep, stepInterval, stepCallback, iterations,
+                              exclude, excludeFocus)
         {
             origin = origin || [0,0];
             stepCallback = stepCallback || function() { };
@@ -131,7 +132,7 @@
                         //side
                             r1 = _paddedRectangle(o1, s1, padding);
 
-                        if (filter(positionArray[i][1], positionArray[i][2]) && geomSupport.intersects(focus, r1)) {
+                        if (!excludeFocus && filter(positionArray[i][1], positionArray[i][2]) && geomSupport.intersects(focus, r1)) {
                             adjustBy = _calculateSpacingAdjustment(focus, r1);
                             constrainedAdjustment = constrain(positionArray[i][1], o1, adjustBy);
                             _move(oid, o1, constrainedAdjustment.left, constrainedAdjustment.top);
@@ -286,11 +287,13 @@
             },
             _run = function(options) {
                 if (elements.length > 1) {
-                    var f = options && options.filter ? options.filter : filter;
-                    var p = options && options.padding ? options.padding : padding;
-                    var i = options && options.iterations ? options.iterations : null;
-                    var e = options && options.exclude ? options.exclude : exclude;
-                    var _movedElements = _magnetize(positionArray, positions, sizes, p, constrain, origin, f, updateOnStep, stepInterval, _positionElements, i, e);
+                    options = options || {};
+                    var f = options.filter || filter;
+                    var p = options.padding || padding;
+                    var i = options.iterations;
+                    var e = options.exclude || exclude;
+                    var ef = options.excludeFocus;
+                    var _movedElements = _magnetize(positionArray, positions, sizes, p, constrain, origin, f, updateOnStep, stepInterval, _positionElements, i, e, ef);
                     _positionElements(_movedElements);
                 }
             },
@@ -319,6 +322,7 @@
          * but the slower it runs. The default is 2.
          * @param {Function} [options.exclude] Optional function to return whether or not a given element should be completely excluded from the magnetisation: it neither
          * moves, nor has any bearing on the movement of other elements.
+         * @param {Boolean} [options.excludeFocus=false] If true, do not pad any elements around the focus point.
          */
         this.execute = function(o, options) {
             setOrigin(o);
@@ -336,6 +340,7 @@
          * but the slower it runs. The default is 2.
          * @param {Function} [options.exclude] Optional function to return whether or not a given element should be completely excluded from the magnetisation: it neither
          * moves, nor has any bearing on the movement of other elements.
+         * @param {Boolean} [options.excludeFocus=false] If true, do not pad any elements around the focus point.
          */
         this.executeAtCenter = function(options) {
             var extents = _updatePositions();
@@ -359,6 +364,7 @@
          * but the slower it runs. The default is 2.
          * @param {Function} [options.exclude] Optional function to return whether or not a given element should be completely excluded from the magnetisation: it neither
          * moves, nor has any bearing on the movement of other elements.
+         * @param {Boolean} [options.excludeFocus=false] If true, do not pad any elements around the focus point.
          */
         this.executeAtEvent = function(e, options) {
             var c = params.container,

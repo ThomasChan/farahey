@@ -76,6 +76,14 @@ exclude:function(id, el) {
 }
 ```
 
+#### Excluding the focus point
+
+By default, the Magnetizer will space every element around the focus point. Setting this to false will prevent this from happening:
+
+```javascript
+excludeFocus:true
+```
+
 #### Constraining Movement
 
 You can provide a `constrain` function to control the movement of your elements.  The method signature is:

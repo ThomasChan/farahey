@@ -1,3 +1,9 @@
+1.1.2
+
+April 23rd 2017
+
+- support suppressing padding around the focus point of the magnetization.
+
 1.1.1
 
 April 23rd 2017
