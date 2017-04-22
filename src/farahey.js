@@ -102,13 +102,14 @@
         },
         _magnetize = function(positionArray, positions, sizes, padding,
                               constrain, origin, filter,
-                              updateOnStep, stepInterval, stepCallback)
+                              updateOnStep, stepInterval, stepCallback, iterations, exclude)
         {
             origin = origin || [0,0];
             stepCallback = stepCallback || function() { };
+            iterations = iterations || 2;
 
             var focus = _paddedRectangle(origin, [1,1], padding),
-                iterations = 100, iteration = 1, uncleanRun = true, adjustBy, constrainedAdjustment,
+                iteration = 1, uncleanRun = true, adjustBy, constrainedAdjustment,
                 _movedElements = {},
                 _move = function(id, o, x, y) {
                     _movedElements[id] = true;
@@ -117,6 +118,11 @@
                 },
                 step = function() {
                     for (var i = 0; i < positionArray.length; i++) {
+
+                        if (exclude(positionArray[i][1])) {
+                            continue;
+                        }
+
                         var o1 = positions[positionArray[i][1]],
                             oid = positionArray[i][1],
                             a1 = positionArray[i][2], // angle to node from magnet origin
@@ -136,6 +142,11 @@
                         r1 = _paddedRectangle(o1, s1, padding);
                         for (var j = 0; j < positionArray.length; j++) {
                             if (i != j) {
+
+                                if (exclude(positionArray[j][1])) {
+                                    continue;
+                                }
+
                                 if (filter(positionArray[j][1])) {
                                     var o2 = positions[positionArray[j][1]],
                                         s2 = sizes[positionArray[j][1]],
@@ -224,6 +235,7 @@
         //minx, miny, maxx, maxy,
             getOrigin = this.getOrigin = function() { return origin; },
             filter = params.filter || function(_) { return true; },
+            exclude = params.exclude || function(_) { return false;},
             orderByDistanceFromOrigin = params.orderByDistanceFromOrigin,
             comparator = new EntryComparator(origin, getSize),
             updateOnStep = params.updateOnStep,
@@ -276,7 +288,9 @@
                 if (elements.length > 1) {
                     var f = options && options.filter ? options.filter : filter;
                     var p = options && options.padding ? options.padding : padding;
-                    var _movedElements = _magnetize(positionArray, positions, sizes, p, constrain, origin, f, updateOnStep, stepInterval, _positionElements);
+                    var i = options && options.iterations ? options.iterations : null;
+                    var e = options && options.exclude ? options.exclude : exclude;
+                    var _movedElements = _magnetize(positionArray, positions, sizes, p, constrain, origin, f, updateOnStep, stepInterval, _positionElements, i, e);
                     _positionElements(_movedElements);
                 }
             },
@@ -298,7 +312,13 @@
          * Runs the magnetize routine.
          * @method execute
          * @param {Number[]} [o] Optional origin to use. You may have set this in the constructor and do not wish to supply it, or you may be happy with the default of [0,0].
-         * @param {Function} [options] Options to override defaults. Currently only `filter` is supported.
+         * @param {Function} [options] Options to override defaults.
+         * @param {Function} [options.filter] Optional function to indicate whether a given element may be moved or not. Returning boolean false indicates it may not.
+         * @param {Number[]} [options.padding] Optional [x,y] padding values for elements.
+         * @param {Number} [options.iterations] Optional max number of iterations to run. The greater this number, the more comprehensive the magnetisation,
+         * but the slower it runs. The default is 2.
+         * @param {Function} [options.exclude] Optional function to return whether or not a given element should be completely excluded from the magnetisation: it neither
+         * moves, nor has any bearing on the movement of other elements.
          */
         this.execute = function(o, options) {
             setOrigin(o);
@@ -309,7 +329,13 @@
         /**
          * Computes the center of all the nodes and then uses that as the magnetization origin when it runs the routine.
          * @method executeAtCenter
-         * @param {Function} [options] Options to override defaults. Currently only `filter` is supported.
+         * @param {Function} [options] Options to override defaults.
+         * @param {Function} [options.filter] Optional function to indicate whether a given element may be moved or not. Returning boolean false indicates it may not.
+         * @param {Number[]} [options.padding] Optional [x,y] padding values for elements.
+         * @param {Number} [options.iterations] Optional max number of iterations to run. The greater this number, the more comprehensive the magnetisation,
+         * but the slower it runs. The default is 2.
+         * @param {Function} [options.exclude] Optional function to return whether or not a given element should be completely excluded from the magnetisation: it neither
+         * moves, nor has any bearing on the movement of other elements.
          */
         this.executeAtCenter = function(options) {
             var extents = _updatePositions();
@@ -326,7 +352,13 @@
          * constructor.
          * @method executeAtEvent
          * @param {Event} e Event to get origin location from.
-         * @param {Function} [options] Options to override defaults. Currently only `filter` is supported.
+         * @param {Function} [options] Options to override defaults.
+         * @param {Function} [options.filter] Optional function to indicate whether a given element may be moved or not. Returning boolean false indicates it may not.
+         * @param {Number[]} [options.padding] Optional [x,y] padding values for elements.
+         * @param {Number} [options.iterations] Optional max number of iterations to run. The greater this number, the more comprehensive the magnetisation,
+         * but the slower it runs. The default is 2.
+         * @param {Function} [options.exclude] Optional function to return whether or not a given element should be completely excluded from the magnetisation: it neither
+         * moves, nor has any bearing on the movement of other elements.
          */
         this.executeAtEvent = function(e, options) {
             var c = params.container,

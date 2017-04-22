@@ -54,7 +54,7 @@ This method takes some event and maps its location to your coordinate space, usi
 
 #### Filtering Elements
 
-You can provide a `filter` function which, when passed the id of some element, should return true if the
+You can provide a `filter` function which, when passed some element, should return true if the
 element may move, or false if it may not:
   
 ```javascript  
@@ -64,6 +64,17 @@ filter:function(id) {
 ```
 
 This shows a simple implementation in which elements that may not move are stored via their ids in a hash.
+
+#### Excluding Elements
+
+You can provide an `exclude` function which, when passed some element, should return true if the given element should be excluded
+from the computation. This means it neither moves nor causes any other elements to move.
+
+```javascript
+exclude:function(id) {
+    return id === "excludeMe";
+}
+```
 
 #### Constraining Movement
 
